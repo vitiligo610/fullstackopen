@@ -1,0 +1,15 @@
+sequenceDiagram
+participant browser
+participant server
+
+browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/new_note
+    activate server
+    server-->>browser: Status Code: 302
+    deactivate server
+
+    browser->>server: Reload request
+    activate server
+    server-->>browser: Browser gets main.css, main.js and data.json
+    deactivate server
+
+    Note right of browser: The browser gets the above files from the server
