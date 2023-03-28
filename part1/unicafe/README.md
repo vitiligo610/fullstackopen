@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Live Site Url
 
-You can view the live site [here](https://tubular-jalebi-75dece.netlify.app/).
+You can view the live site [here](https://cosmic-kashata-ae93a1.netlify.app/).
 
 ## Available Scripts
 
