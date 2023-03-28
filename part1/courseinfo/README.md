@@ -4,7 +4,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 ## Live Site Url
 
-You can view the live site of this app [here](https://creative-nasturtium-c78f9d.netlify.app/).
+You can view the live site [here](https://creative-nasturtium-c78f9d.netlify.app/).
 
 ## Available Scripts
 
