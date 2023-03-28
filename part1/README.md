@@ -14,8 +14,10 @@ There is one application by folder, to start an application :
 ```bash
 # Head to the desired exercise (courseinfo, unicafe or anecdotes)
 $ cd courseinfo
+# Install packages
+$ npm install
 # Start the application
-$ yarn start
+$ npm start
 ```
 
 You can then access the frontend on : [http://localhost:3000/](http://localhost:3000/)
