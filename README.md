@@ -1,4 +1,4 @@
-# [Full Stack Open](https://fullstackopen.com/en/)
+# [Full Stack Open 2023](https://fullstackopen.com/en/)
 
 ## Deep Dive Into Modern Web Development
 
