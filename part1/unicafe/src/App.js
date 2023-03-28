@@ -1,37 +1,58 @@
 import { useState } from "react"
 
+const StatisticsLine = ({ name, value }) => {
+    return (
+        <tr>
+            <td>{name}</td>
+            <td>{value}</td> 
+        </tr>
+    )
+}
+
+const Statistics = ({ good, neutral, bad, all, average, positive }) => {
+    return (
+        <table>
+            <tbody>
+                {
+                    (good === 0 && neutral === 0 && bad === 0) ?
+                        <StatisticsLine name = "No feedback given" /> : 
+                        (
+                            <>
+                                <StatisticsLine name = "good" value = {good} />
+                                <StatisticsLine name = "neutral" value = {neutral} />
+                                <StatisticsLine name = "bad" value = {bad} />
+                                <StatisticsLine name = "all" value = {all} />
+                                <StatisticsLine name = "average" value = {average} />
+                                <StatisticsLine name = "positive" value = {positive + "%"} />
+                            </>
+                        )
+                }
+            </tbody>
+        </table>
+    )
+}
+
 const App = () => {
 
-    const [ clicks, setClicks ] = useState({
-        good: 0,
-        neutral: 0,
-        bad: 0
-    })
+    const [good, setGood] = useState(0)
+    const [neutral, setNeutral] = useState(0)
+    const [bad, setBad] = useState(0)
 
     const handleGoodClick = () => {
-        setClicks({
-            ...clicks,
-            good: clicks.good + 1
-        })
+        setGood(good + 1)
     }
 
     const handleNeutralClick = () => {
-        setClicks({
-            ...clicks,
-            neutral: clicks.neutral + 1
-        })
+        setNeutral(neutral + 1)
     }
 
     const handleBadClick = () => {
-        setClicks({
-            ...clicks,
-            bad: clicks.bad + 1
-        })
+        setBad(bad + 1)
     }
 
-    const all = clicks.good + clicks.neutral + clicks.bad
-    const average = (all / 3)
-    const positive = (clicks.good / all) * 100
+    const all = good + neutral + bad
+    const average = (all / 3).toFixed(1)
+    const positive = ((good / all) * 100).toFixed(1)
 
     return (
         <div>
@@ -40,34 +61,15 @@ const App = () => {
             <button onClick = {handleNeutralClick}>neutral</button>
             <button onClick = {handleBadClick}>bad</button>
             <h2>statistics</h2>
-            <table>
-                <tbody>
-                <tr>
-                    <td>good</td>
-                    <td>{clicks.good}</td>
-                </tr>
-                <tr>
-                    <td>neutral</td>
-                    <td>{clicks.neutral}</td>
-                </tr>
-                <tr>
-                    <td>bad</td>
-                    <td>{clicks.bad}</td>
-                </tr>
-                <tr>
-                    <td>all</td>
-                    <td>{all}</td>
-                </tr>
-                <tr>
-                    <td>average</td>
-                    <td>{average.toFixed(1)}</td>
-                </tr>
-                <tr>
-                    <td>positive</td>
-                    <td>{isNaN(positive) ? 0 : positive.toFixed(1)}%</td>
-                </tr>
-                </tbody>
-            </table>
+            <Statistics
+                good = {good}
+                neutral = {neutral}
+                bad = {bad}
+                all = {all}
+                average = {average}
+                positive = {positive}
+            />
+            
         </div>
     )
 }
