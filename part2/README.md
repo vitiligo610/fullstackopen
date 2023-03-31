@@ -12,7 +12,7 @@ There is one application by folder, to start an application :
 
 ```bash
 # Head to the desired exercise (courseinfo, unicafe or anecdotes)
-$ cd courseinfo
+$ cd phonebook
 # Install packages
 $ npm install
 # Start the application
