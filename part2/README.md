@@ -11,7 +11,7 @@ In this part, we will first take a look at how to render a data collection, like
 There is one application by folder, to start an application :
 
 ```bash
-# Head to the desired exercise (courseinfo, unicafe or anecdotes)
+# Head to the desired exercise (courseinfo, unicafe, etc)
 $ cd phonebook
 # Install packages
 $ npm install
