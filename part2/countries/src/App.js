@@ -40,17 +40,32 @@ function App({ data }) {
     <div className='container'>
       <Input handleChange={handleChange} />
       {
-        countriesData.length > 0 && 
-        countriesData.map((c, i) => {
-          if (c.name.common.toLowerCase().includes(input)) {
-            return <CountriesData key={uuid()} data={c} />
-        } else {
-          return null
-        }
-        })
+        countriesData.length > 0 ? (
+          names.length === 0 ? (
+            <p></p>
+          ) : names.length > 10 ? (
+            <p>Too many matches, specify another filter</p>
+          ) : names.length === 1 ? (
+            countriesData.map((c, i) => {
+              if (c.name.common.toLowerCase().includes(input)) {
+                return <CountriesData key={uuid()} data={c} single={true} />;
+              } else {
+                return null;
+              }
+            })
+          ) : (
+            countriesData.map((c, i) => {
+              if (c.name.common.toLowerCase().includes(input)) {
+                return <CountriesData key={uuid()} data={c} single={false} />;
+              } else {
+                return null;
+              }
+            })
+          )
+        ) : null
       }
     </div>
   )
 }
 
-export default App;
+export default App
