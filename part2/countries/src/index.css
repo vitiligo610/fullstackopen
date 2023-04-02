@@ -1,7 +1,10 @@
 @import url(https://fonts.googleapis.com/css?family=Source+Serif+Pro:200,200italic,300,300italic,regular,italic,600,600italic,700,700italic,900,900italic);
 
-body {
+* {
+  box-sizing: border-box;
+}
 
+body {
   margin: 0;
   font-family: 'Source Serif Pro', sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -22,4 +25,38 @@ code {
 
 img {
   border: 1px solid #eee;
+}
+
+p {
+  margin: 5px;
+}
+
+input {
+  border-radius: 4px;
+  border: 2px solid #E5E6E6;
+  transition: all 0.1s ease-in-out;
+}
+
+input:focus {
+  border: 2px solid #0151C8;
+  outline: none;
+}
+
+button {
+  background-color: #fff;
+  border-radius: 4px;
+  font-size: 12px;
+  border: 1.5px solid #E5E6E6;
+}
+
+button:active {
+  background-color: #0151C8;
+  color: #fff;
+  transform: scale(0.98);
+}
+
+.border {
+  max-width: 100%;
+  border-bottom: 1px solid #E5E6E6;
+  margin: 10px 0;
 }
