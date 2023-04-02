@@ -35,6 +35,7 @@ function App({ data }) {
   }, [input, countriesData])
   console.log(names)
   
+  // WARNING: The code below is uglier than a three-toed sloth with a bad case of bedhead. Viewer discretion is advised, proceed at your own risk!
 
   return (
     <div className='container'>
