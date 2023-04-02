@@ -23,7 +23,7 @@ code {
   position: relative
 }
 
-img {
+img.flag {
   border: 1px solid #eee;
 }
 
