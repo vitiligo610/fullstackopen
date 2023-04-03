@@ -35,7 +35,6 @@ function App({ data }) {
   }, [input, countriesData])
   console.log(names)
   
-  // WARNING: The code below is uglier than a three-toed sloth with a bad case of bedhead. Viewer discretion is advised, proceed at your own risk!
 
   return (
     <div className='container'>
@@ -47,19 +46,19 @@ function App({ data }) {
           ) : names.length > 10 ? (
             <p>Too many matches, specify another filter</p>
           ) : names.length === 1 ? (
-            countriesData.map((c, i) => {
+            countriesData.map(c => {
               if (c.name.common.toLowerCase().includes(input)) {
-                return <CountriesData key={uuid()} data={c} single={true} />;
+                return <CountriesData key={uuid()} data={c} single={true} />
               } else {
                 return null;
               }
             })
           ) : (
-            countriesData.map((c, i) => {
+            countriesData.map(c => {
               if (c.name.common.toLowerCase().includes(input)) {
-                return <CountriesData key={uuid()} data={c} single={false} />;
+                return <CountriesData key={uuid()} data={c} single={false} />
               } else {
-                return null;
+                return null
               }
             })
           )
