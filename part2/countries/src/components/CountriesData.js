@@ -1,8 +1,7 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from 'react'
 import axios from 'axios'
 
 function CountriesData ({ data, single }) {
-    // data.name.common == 'Palestine' && console.log(data)
     const [visible, setVisible] = useState(false)
     const [coordinates, setCoordinates] = useState({
         lat: null,
@@ -10,50 +9,58 @@ function CountriesData ({ data, single }) {
     })
     const [weatherData, setWeatherData] = useState(null)
     const [loadingWeather, setLoadingWeather] = useState(true)
-
+    const [buttonClicked, setButtonClicked] = useState(false)
+    
     const appId = 'e012c27ed355e7aa7790ae554ce61d93'
-    const cityName = data.capital[0]
-
+    
+    let cityName
+    if (data.capital)
+    cityName = data.capital[0]
+    
     const geoDataUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${cityName}&limit=5&appid=${appId}`
 
+    useEffect(() => {
+        single && setButtonClicked(true)
+    }, [single])
 
     useEffect(() => {
-        axios
-            .get(geoDataUrl)
-            .then(response => {
-                setCoordinates({
-                    lat: response.data[0].lat,
-                    lon: response.data[0].lon
+        if (buttonClicked) {
+            axios
+                .get(geoDataUrl)
+                .then(response => {
+                    setCoordinates({
+                        lat: response.data[0].lat,
+                        lon: response.data[0].lon
+                    })
                 })
-            })
-    }, [])
-        
-    // data.name.common == 'Palestine' && console.log(coordinates)
-    
-    
+                .catch(error => console.log(error))
+        }
+    }, [buttonClicked])
     
     useEffect(() => {
-        if (coordinates.lat !== null && coordinates.lon !== null){
-            const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude=hourly,daily&units=metric&appid=${appId}`
-        
-        axios
-            .get(url)
-            .then(response => {
-                setWeatherData(
-                    {
-                        temp: response.data.current.temp,
-                        description: response.data.current.weather[0].description,
-                        icon: response.data.current.weather[0].icon,
-                        wind_speed: response.data.current.wind_speed
-                    }
-                )
-                setLoadingWeather(!loadingWeather)
-            })
+        if (buttonClicked) {
+            if (coordinates.lat !== null && coordinates.lon !== null) {
+                const url = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&exclude=hourly,daily&units=metric&appid=${appId}`
+            
+                axios
+                    .get(url)
+                    .then(response => {
+                        console.log('request sent')
+                        setWeatherData(
+                            {
+                                temp: response.data.current.temp,
+                                description: response.data.current.weather[0].description,
+                                icon: response.data.current.weather[0].icon,
+                                wind_speed: response.data.current.wind_speed
+                            }
+                        )
+                        setLoadingWeather(!loadingWeather)
+                    })
+                    .catch(error => console.log(error))
+            }
         }
-    }, [coordinates])
-    // data.name.common === 'Palestine' && console.log(weatherData)
-
-
+    }, [buttonClicked, coordinates])
+    data.name.common === 'Palestine' && console.log(weatherData)
 
     function loopLanguages (languages) {
         const values = []
@@ -86,8 +93,9 @@ function CountriesData ({ data, single }) {
         )
     }
 
-    function handleChange () {
+    function handleClick () {
         setVisible(!visible)
+        setButtonClicked(!buttonClicked)
     }
 
     return (
@@ -95,7 +103,7 @@ function CountriesData ({ data, single }) {
             {
                 !single && 
                 <p>
-                    {data.name.common} <button onClick={handleChange}>{visible ? "hide" : "show"}</button>
+                    {data.name.common} <button onClick={handleClick}>{visible ? "hide" : "show"}</button>
                 </p>
             }
             {
@@ -106,7 +114,7 @@ function CountriesData ({ data, single }) {
                     <b>Capital:</b> {loopCapitals(data.capital)}<br />
                     <b>Area:</b> {data.area} km²<br /><br />
                     <b>Languages:</b> <ul>{loopLanguages(data.languages)}</ul>
-                    <img className="flag" src={data.flags.png} /><br /><br />
+                    <img className="flag" src={data.flags.png} alt='' /><br /><br />
                     {data.flags.alt && <><b>Flag Alt:</b> {data.flags.alt}</>}<br />
                     {loadingWeather && <h2>Loading weather data...</h2>}
                     {
