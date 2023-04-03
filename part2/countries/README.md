@@ -22,4 +22,4 @@ $ npm start
 You can then access the app on : http://localhost:3000/
 
 ## Live Site Url
-You can view the live site [here](https://dreamy-puffpuff-06be7d.netlify.app/).
+You can view the live site [here](https://wonderful-pixie-9073b0.netlify.app/)).
