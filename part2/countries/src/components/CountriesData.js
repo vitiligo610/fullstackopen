@@ -11,7 +11,7 @@ function CountriesData ({ data, single }) {
     const [loadingWeather, setLoadingWeather] = useState(true)
     const [buttonClicked, setButtonClicked] = useState(false)
     
-    const appId = 'e012c27ed355e7aa7790ae554ce61d93'
+    const appId = process.env.REACT_APP_API_KEY
     
     let cityName
     if (data.capital)
