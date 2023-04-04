@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 
-function CountriesData ({ data, single }) {
+function CountryData ({ data, single }) {
     const [visible, setVisible] = useState(false)
     const [coordinates, setCoordinates] = useState({
         lat: null,
@@ -134,4 +134,4 @@ function CountriesData ({ data, single }) {
     )
 }
 
-export default CountriesData
+export default CountryData
