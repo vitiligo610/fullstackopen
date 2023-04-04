@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import uuid from 'react-uuid'
 import axios from 'axios'
 import Input from './components/Input'
-import CountriesData from './components/CountriesData'
+import CountryData from './components/CountryData'
 
 function App({ data }) {
   const [input, setInput] = useState('')
@@ -49,7 +49,7 @@ function App({ data }) {
           ) : names.length === 1 ? (
             countriesData.map(c => {
               if (c.name.common.toLowerCase().includes(input)) {
-                return <CountriesData key={uuid()} data={c} single={true} />
+                return <CountryData key={uuid()} data={c} single={true} />
               } else {
                 return null;
               }
@@ -57,7 +57,7 @@ function App({ data }) {
           ) : (
             countriesData.map(c => {
               if (c.name.common.toLowerCase().includes(input)) {
-                return <CountriesData key={uuid()} data={c} single={false} />
+                return <CountryData key={uuid()} data={c} single={false} />
               } else {
                 return null
               }
