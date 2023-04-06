@@ -1,6 +1,6 @@
 # Countries
 
-### Live Site Url
+## Live Site Url
 You can see the live site [here](https://vitiligo-countries.netlify.app/).
 
 In this exercise, we created an application, in which one can look at data of various countries. The data are fetched from the API https://restcountries.com, that provides a lot data for different countries in a machine readable format, a so-called REST API.
