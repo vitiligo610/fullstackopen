@@ -2,6 +2,8 @@ require('dotenv').config()
 const mongoose = require('mongoose')
 const uniqueValidator = require('mongoose-unique-validator')
 
+// mongoose-unique-validator is not compatible with mongoose 7.x yet. It is expected to update soon.
+
 mongoose.set('strictQuery', false)
 
 const url = 'mongodb+srv://softwareguild:softwareguild@cluster0.mczfbrg.mongodb.net/?retryWrites=true&w=majority'
