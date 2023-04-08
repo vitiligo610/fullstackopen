@@ -17,4 +17,4 @@ $ echo "MONGODB_URI=<YOUR-MONGODB-URI>" > .env
 $ npm run dev
 ```
 
-You can then access the app on : http://localhost:3001/
+You can then access the app on: http://localhost:3001/
