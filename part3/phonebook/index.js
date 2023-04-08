@@ -94,7 +94,7 @@ app.post('/api/persons', (request, response) => {
 
       person
         .save()
-        .then((savedPerson) => {
+        .then(savedPerson => {
           response.json(savedPerson)
           console.log('person added', savedPerson)
         })
@@ -113,11 +113,11 @@ app.put('/api/persons/:id', (request, response, next) => {
     number: body.number
   }
 
-  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+  Person.findByIdAndUpdate(request.params.id, person, { new: true, runValidators: true, context: 'query' })
     .then(updatedPerson => {
       response.json(updatedPerson)
     })
-    .catch(error => next(error))
+    .catch(error => {next(error);console.log(error)})
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -129,13 +129,17 @@ app.delete('/api/persons/:id', (request, response) => {
 
 const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
-    response.status(404).send({ error: 'malformed id' })
+    return response.status(404).send({ error: 'malformed id' })
+  } else if (error.name === 'ValidationError') {
+    return response.status(400).json({ error: error.message })
   }
+
+  next(error)
 }
 
 app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log('Server is up and running')
 })
