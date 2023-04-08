@@ -1,4 +1,3 @@
-import React from "react"
 import Person from "./Person"
 
 const Persons = ({ persons, query, del }) => {
@@ -15,7 +14,7 @@ const Persons = ({ persons, query, del }) => {
                         <td><b>Phone</b></td>
                     </tr>
                     {
-                        personFilter.map((p, i) => <Person key={i} name={p.name} phone={p.phone} id={p.id} del={del} />)
+                        personFilter.map((p, i) => <Person key={i} name={p.name} number={p.number} id={p.id} del={del} />)
                     }
                 </tbody>
             </table>
