@@ -8,9 +8,8 @@ import Message from './components/Message'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-      
   const [newName, setNewName] = useState('')
-  const [newPhone, setNewPhone] = useState('')
+  const [newNumber, newNewNumber] = useState('')
   const [filterQuery, setFilterQuery] = useState('')
   const [message, setMessage] = useState(null)
 
@@ -27,20 +26,21 @@ const App = () => {
   const addPerson = e => {
     e.preventDefault()
     
-    const nameObject = {
+    const personObject = {
       name: newName,
-      phone: newPhone
+      number: newNumber
     }
+
     const names = persons.map(p => p.name)
     if (names.includes(newName)) {
       alert(`${newName} is already added to the phonebook`)
     } else {
       personService
-        .createPerson(nameObject)
+        .createPerson(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
-          setNewPhone('')
+          newNewNumber('')
           setMessage(`${newName} was successfully added.`)
           setTimeout(() => setMessage(null), 5000)
         })
@@ -72,9 +72,9 @@ const App = () => {
       <AddPerson
         addPerson={addPerson}
         newName={newName}
+        newNumber={newNumber}
         handleNameChange={handleChange(setNewName)}
-        newPhone={newPhone}
-        handlePhoneChange={handleChange(setNewPhone)}
+        handleNumberChange={handleChange(newNewNumber)}
       />
       <Persons persons={persons} query={filterQuery} del={deletePerson} />
     </div>
