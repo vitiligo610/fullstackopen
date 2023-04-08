@@ -1,6 +1,4 @@
-import React from "react"
-
-const AddPerson = ({ addPerson, newName, handleNameChange, newPhone, handlePhoneChange }) => {
+const AddPerson = ({ addPerson, newName, handleNameChange, newNumber, handleNumberChange }) => {
     return (
         <>
             <h2>add a new</h2>
@@ -9,7 +7,7 @@ const AddPerson = ({ addPerson, newName, handleNameChange, newPhone, handlePhone
                 name: <input value={newName} onChange={handleNameChange} />
                 </div>
                 <div>
-                phone: <input value={newPhone} onChange={handlePhoneChange} />
+                phone: <input value={newNumber} onChange={handleNumberChange} />
                 </div>
                 <div>
                 <button type="submit">add</button>
