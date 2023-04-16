@@ -2,6 +2,10 @@
 
 In this exercise, we implemented a fullstack phonebook app with a backend written in Node.js and a frontend in react.js. The data are saved in a mongodb database and the app is deployed on heroku at the folowing URL.
 
+## Live Site Url
+
+You can view the live site [here](https://vitiligo-part3-phonebook.vercel.app/).
+
 ## Start the application locally
 
 To start an application:
