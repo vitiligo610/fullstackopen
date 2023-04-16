@@ -1,5 +1,5 @@
 import axios from 'axios'
-const baseUrl = 'https://2mwyu2-3001.csb.app/api/persons'
+const baseUrl = 'http://localhost:3001/api/persons'
 
 const getAll = () => {
     const response = axios.get(baseUrl)
