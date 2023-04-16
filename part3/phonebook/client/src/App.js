@@ -8,9 +8,8 @@ import Message from './components/Message'
 
 const App = () => {
   const [persons, setPersons] = useState([])
-      
   const [newName, setNewName] = useState('')
-  const [newPhone, setNewPhone] = useState('')
+  const [newNumber, setNewNumber] = useState('')
   const [filterQuery, setFilterQuery] = useState('')
   const [message, setMessage] = useState(null)
 
@@ -27,20 +26,33 @@ const App = () => {
   const addPerson = e => {
     e.preventDefault()
     
-    const nameObject = {
+    const personObject = {
       name: newName,
-      phone: newPhone
+      number: newNumber
     }
+
     const names = persons.map(p => p.name)
+    const existingPerson = persons.find(p => p.name === newName)
     if (names.includes(newName)) {
-      alert(`${newName} is already added to the phonebook`)
+      if(window.confirm(`${newName} is already added to the phonebook, replace the old number with the new one?`)) {
+        const changedPerson = { ...existingPerson, number: newNumber }
+        personService
+          .updatePerson(existingPerson.id, changedPerson)
+          .then(updatedPerson => {
+            setPersons(persons.map(p => (p.id !== existingPerson.id ? p : updatedPerson)))
+            setNewName('')
+            setNewNumber('')
+            setMessage(`${newName} was successfully updated.`)
+            setTimeout(() => setMessage(null), 5000)
+          })
+      }
     } else {
       personService
-        .createPerson(nameObject)
+        .createPerson(personObject)
         .then(returnedPerson => {
           setPersons(persons.concat(returnedPerson))
           setNewName('')
-          setNewPhone('')
+          setNewNumber('')
           setMessage(`${newName} was successfully added.`)
           setTimeout(() => setMessage(null), 5000)
         })
@@ -72,9 +84,9 @@ const App = () => {
       <AddPerson
         addPerson={addPerson}
         newName={newName}
+        newNumber={newNumber}
         handleNameChange={handleChange(setNewName)}
-        newPhone={newPhone}
-        handlePhoneChange={handleChange(setNewPhone)}
+        handleNumberChange={handleChange(setNewNumber)}
       />
       <Persons persons={persons} query={filterQuery} del={deletePerson} />
     </div>
