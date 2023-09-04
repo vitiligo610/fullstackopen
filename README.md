@@ -14,7 +14,7 @@ Learn React, Redux, Node.js, MongoDB, GraphQL and TypeScript in one go! This cou
 
 ### [Part 4 - Testing Express servers, user administration](./part4)
 
-<!-- ### [Part 5 - Testing React apps](./part5) -->
+### [Part 5 - Testing React apps](./part5)
 
 <!-- ### [Part 6 - State management with Redux](./part6) -->
 
