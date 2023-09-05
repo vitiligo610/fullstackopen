@@ -17,7 +17,12 @@ const Anecdote = ({ anecdote, vote }) => {
 
 const AnecdoteList = () => {
   const dispatch = useDispatch()
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => {
+    if (state.filter === 'ALL')
+      return state.anecdotes
+    const regex = new RegExp( state.filter, 'i' )
+    return state.anecdotes.filter(anecdote => anecdote.content.match(regex))
+  })
 
   const byVotes = (v1, v2) => v2.votes - v1.votes
 
