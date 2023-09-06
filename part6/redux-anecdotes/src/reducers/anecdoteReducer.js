@@ -40,8 +40,8 @@ export const vote = id => {
       ...anecdoteToChange,
       votes: anecdoteToChange.votes + 1
     }
-    await anecdoteService.update(id, changedAnecdote)
-    dispatch(voteAnecdote(state.anecdotes.map(anecdote => anecdote.id !== id ? anecdote : changedAnecdote)))
+    const updatedAnecdoteFromServer = await anecdoteService.update(id, changedAnecdote)
+    dispatch(voteAnecdote(state.anecdotes.map(anecdote => anecdote.id !== id ? anecdote : updatedAnecdoteFromServer)))
   }
 }
 
