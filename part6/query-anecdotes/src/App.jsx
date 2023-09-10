@@ -1,19 +1,32 @@
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { getAnecdotes } from './requests'
+
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
 const App = () => {
+  const queryClient = useQueryClient()
 
   const handleVote = (anecdote) => {
     console.log('vote')
   }
 
-  const anecdotes = [
-    {
-      "content": "If it hurts, do it more often",
-      "id": "47145",
-      "votes": 0
-    },
-  ]
+  const result = useQuery({
+    queryKey: ['anecdotes'],
+    queryFn: getAnecdotes,
+    retry: false
+  })
+  console.log(JSON.parse(JSON.stringify(result)))
+
+  if (result.isLoading) {
+    return <h2>loading data...</h2>
+  }
+
+  if (result.isError) {
+    return <h2>Error: {result.error.message}</h2>
+  }
+
+  const anecdotes = result.data
 
   return (
     <div>
