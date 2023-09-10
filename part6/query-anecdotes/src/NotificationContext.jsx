@@ -23,6 +23,14 @@ export const useDispatchValue = () => {
   return notificationAndDispatch[1]
 }
 
+export const showNotification = (dispatch, message, duration = 5000) => {
+  dispatch({ type: 'SHOW_NOTIFICATION', payload: message })
+
+  setTimeout(() => {
+    dispatch({ type: 'HIDE_NOTIFICATION' })
+  }, duration)
+}
+
 export const NotificationContextProvider = (props) => {
   const [notification, notificationDispatch] = useReducer(notificationReducer, '')
 
