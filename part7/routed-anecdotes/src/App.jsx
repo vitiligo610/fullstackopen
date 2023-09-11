@@ -78,10 +78,16 @@ const CreateNew = (props) => {
     props.addNew({
       content: content.value,
       author: author.value,
-      infor: info.value,
+      info: info.value,
       votes: 0
     })
     navigate('/')
+  }
+
+  const handleReset = () => {
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -100,7 +106,8 @@ const CreateNew = (props) => {
           url for more info
           <input name='info' {...info} />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="button" onClick={handleReset}>reset</button>
       </form>
     </div>
   )
