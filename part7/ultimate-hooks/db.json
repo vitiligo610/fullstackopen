@@ -1,0 +1,30 @@
+{
+  "notes": [
+    {
+      "content": "HTML is easy",
+      "important": true,
+      "id": 1
+    },
+    {
+      "content": "Browser can only execute JavaScript",
+      "important": false,
+      "id": 2
+    },
+    {
+      "content": "custom hooks are awesome",
+      "id": 3
+    }
+  ],
+  "persons": [
+    {
+      "name": "John Doe",
+      "number": "903-3842-482",
+      "id": 1
+    },
+    {
+      "name": "Dan Abramove",
+      "number": "372-4825-279",
+      "id": 2
+    }
+  ]
+}
