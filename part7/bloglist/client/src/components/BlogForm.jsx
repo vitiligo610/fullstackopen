@@ -1,47 +1,30 @@
-import { useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useField } from '../hooks'
+import { createBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ createBlog }) => {
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
+const BlogForm = () => {
+  const dispatch = useDispatch()
+
+  const title = useField('text')
+  const author = useField('author')
+  const url = useField('url')
 
   const addBlog = e => {
     e.preventDefault()
-    createBlog({
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url
-    })
+    dispatch(createBlog({ title, author, url }))
   }
 
   return (
     <form onSubmit={addBlog}>
       <h2>create new</h2>
       <div>
-        title: <input
-          type='text'
-          value={newBlog.title}
-          name='Title'
-          onChange={({ target }) => setNewBlog(prev => ({ ...prev, title: target.value }))}
-        />
+        title: <input {...title} />
       </div>
       <div>
-        author: <input
-          type='text'
-          value={newBlog.author}
-          name='Author'
-          onChange={({ target }) => setNewBlog(prev => ({ ...prev, author: target.value }))}
-        />
+        author: <input {...author} />
       </div>
       <div>
-        url: <input
-          type='text'
-          value={newBlog.url}
-          name='Url'
-          onChange={({ target }) => setNewBlog(prev => ({ ...prev, url: target.value }))}
-        />
+        url: <input {...url} />
       </div>
       <button>create</button>
     </form>
