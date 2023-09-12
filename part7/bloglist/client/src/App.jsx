@@ -38,32 +38,27 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const createBlog = (blogObject) => {
+  const createBlog = (blogToAdd) => {
     blogFormRef.current.toggleVisibility()
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
-    })
-
-    // setSuccessMessage(
-    //   `a new blog ${blogObject.title} by ${blogObject.author} added`
-    // )
-    // setTimeout(() => {
-    //   setSuccessMessage(null)
-    // }, 5000)
-    dispatch(setNotification(dispatch, 'success', `a new blog ${blogObject.title} by ${blogObject.author} added`))
+    try {
+      blogService
+        .create(blogToAdd).
+        then((addedBlog) => {
+          setBlogs(blogs.concat(addedBlog))
+          dispatch(setNotification(dispatch, 'success', `a new blog ${addedBlog.title} by ${addedBlog.author} added`))
+        })
+    } catch (error) {
+      dispatch(setNotification(dispatch, 'error', `Cannot add blog ${blogObject.title}`))
+    }
   }
 
   const updateBlog = async (blogToUpdate) => {
     try {
       blogService.update(blogToUpdate).then((updatedBlog) => {
         setBlogs(blogs.map((b) => (b.id !== updatedBlog.id ? b : updatedBlog)))
-        // setSuccessMessage(`Blog ${blogToUpdate.title} was successfully updated`)
-        // setTimeout(() => setSuccessMessage(null), 2000)
         dispatch(setNotification(dispatch, 'success', `Blog ${blogToUpdate.title} was successfully updated`))
       })
     } catch (error) {
-      // setErrorMessage(`Cannot update blog ${blogToDelete.title}`)
-      // setTimeout(() => setErrorMessage(null), 2000)
       dispatch(setNotification(dispatch, 'error', `Cannot update blog ${blogToUpdate.title}`))
     }
   }
@@ -79,12 +74,8 @@ const App = () => {
       try {
         await blogService.remove(blogToDelete)
         setBlogs(blogs.filter((n) => n.id !== blogToDelete.id))
-        // setSuccessMessage(`Blog ${blogToDelete.title} was successfully deleted`)
-        // setTimeout(() => setSuccessMessage(null), 2000)
         dispatch(setNotification(dispatch, 'success', `Blog ${blogToDelete.title} was successfully deleted`))
       } catch (error) {
-        // setErrorMessage(`Cannot remove blog ${blogToDelete.title}`)
-        // setTimeout(() => setErrorMessage(null), 2000)
         dispatch(setNotification(dispatch, 'error', `Cannot remove blog ${blogToDelete.title}`))
       }
     }
@@ -106,10 +97,6 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      // setErrorMessage('Wrong Credentials')
-      // setTimeout(() => {
-      //   setErrorMessage(null)
-      // }, 5000)
       dispatch(setNotification(dispatch, 'error', `Wrong Credentials`))
     }
   }
