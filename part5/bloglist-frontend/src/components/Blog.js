@@ -13,7 +13,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       ...blogObject,
       likes: blogObject.likes++
     }
-    await updateBlog(blogObject)
+    await updateBlog(updateBlog)
     setBlogObject(updatedBlog)
   }
 
