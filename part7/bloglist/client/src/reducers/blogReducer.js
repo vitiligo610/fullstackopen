@@ -52,6 +52,8 @@ export const updateLikesOf = blogObject => {
         likes: blogToUpdate.likes + 1
       }
       const updatedBlogFromServer = await blogService.update(updatedBlog)
+      console.log('blogState', getState())
+      console.log('updatdBlogFromServer', updatedBlogFromServer)
       dispatch(update(blogs.map(blog => blog.id !== updatedBlogFromServer.id ? blog : updatedBlogFromServer)))
     } catch (error) {
       dispatch(setNotification('error', `Cannot update blog '${blogToUpdate.title}'`))
