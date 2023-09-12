@@ -11,9 +11,9 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   const increaseLikes = async () => {
     const updatedBlog = {
       ...blogObject,
-      likes: blogObject.likes++
+      likes: blogObject.likes + 1
     }
-    await updateBlog(blogObject)
+    await updateBlog(updatedBlog)
     setBlogObject(updatedBlog)
   }
 
@@ -40,7 +40,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
           <br /><a href={blog.url} target='blank'>{blog.url}</a><br />
           likes {blogObject.likes}
           <button onClick={increaseLikes} style={buttonStyle}>like</button><br />
-          {blog.user.name || blog.user.username}<br />
+          {blog.user.username}<br />
           <button onClick={() => removeBlog(blog)} style={buttonStyle}>remove</button>
         </>
       }

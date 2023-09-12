@@ -17,6 +17,7 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  console.log('rerendering App')
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -51,12 +52,15 @@ const App = () => {
 
   const updateBlog = async blogToUpdate => {
     try {
-      await blogService
+      blogService
         .update(blogToUpdate)
-      setSuccessMessage(`Blog ${blogToUpdate.title} was successfully updated`)
-      setTimeout(() => setSuccessMessage(null), 2000)
-    } catch (error) {
-      setErrorMessage(`Cannot update blog ${blogToUpdate.title}`)
+        .then(updatedBlog => {
+          setBlogs(blogs.map(b => b.id !== updatedBlog.id ? b : updatedBlog))
+          setSuccessMessage(`Blog ${blogToUpdate.title} was successfully updated`)
+          setTimeout(() => setSuccessMessage(null), 2000)
+        })
+    } catch(error) {
+      setErrorMessage(`Cannot update blog ${blogToDelete.title}`)
       setTimeout(() => setErrorMessage(null), 2000)
     }
   }
@@ -143,7 +147,7 @@ LoginForm.propTypes = {
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.string.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 }
 
