@@ -1,22 +1,6 @@
-import { useState } from 'react'
+import { Link } from 'react-router-dom'
 
-const Blog = ({ blog, updateBlog, removeBlog }) => {
-  const [detailsVisible, setDetailsVisible] = useState(false)
-  const [blogObject, setBlogObject] = useState(blog)
-
-  const toggleDetailsVisibility = () => {
-    setDetailsVisible(!detailsVisible)
-  }
-
-  const increaseLikes = async () => {
-    const updatedBlog = {
-      ...blogObject,
-      likes: blogObject.likes + 1
-    }
-    await updateBlog(updatedBlog)
-    setBlogObject(updatedBlog)
-  }
-
+const Blog = ({ blog }) => {
   const blogStyle = {
     paddingTop: 5,
     paddingBottom: 5,
@@ -26,24 +10,9 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     marginBottom: 5
   }
 
-  const buttonStyle = {
-    marginLeft: 5
-  }
-
   return (
     <div style={blogStyle}>
-      {blog.title} - {blog.author}
-      <button onClick={toggleDetailsVisibility} style={buttonStyle}>{detailsVisible ? 'hide' : 'show'}</button>
-      {
-        detailsVisible &&
-        <>
-          <br /><a href={blog.url} target='blank'>{blog.url}</a><br />
-          likes {blogObject.likes}
-          <button onClick={increaseLikes} style={buttonStyle}>like</button><br />
-          {blog.user.username}<br />
-          <button onClick={() => removeBlog(blog)} style={buttonStyle}>remove</button>
-        </>
-      }
+      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
     </div>
   )
 }

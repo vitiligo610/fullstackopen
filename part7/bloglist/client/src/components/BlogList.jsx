@@ -1,9 +1,10 @@
+import { useRef } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-
-import { setNotification } from '../reducers/notificationReducer'
 import { updateLikesOf, removeBlog as deleteBlog } from '../reducers/blogReducer'
-
+import { setNotification } from '../reducers/notificationReducer'
+import Togglable from './Togglable'
 import Blog from './Blog'
+import BlogForm from './BlogForm'
 
 const BlogList = () => {
   const dispatch = useDispatch()
@@ -12,28 +13,24 @@ const BlogList = () => {
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
-  const updateBlog = (blogToUpdate) => {
-    dispatch(updateLikesOf(blogToUpdate))
-    dispatch(setNotification('success', `Blog '${blogToUpdate.title}' was successfully updated`))
-  }
+  
 
-  const removeBlog = async (blogToDelete) => {
-    if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
-      await dispatch(deleteBlog(blogToDelete))
-      dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully deleted`))
-    }
-  }
+  const blogFormRef = useRef()
+
+  const toggleForm = () => blogFormRef.current.toggleVisibility()
 
   const blogsCopy = [...blogs]
-  console.log('value', blogsCopy)
+
   return (
     <div>
+      <h2>blogs</h2>
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <BlogForm toggleForm={toggleForm} />
+      </Togglable>
       {blogsCopy.sort(byLikes).map(blog => (
         <Blog
           key={blog.id}
           blog={blog}
-          updateBlog={updateBlog}
-          removeBlog={removeBlog}
         />
       ))}
     </div>

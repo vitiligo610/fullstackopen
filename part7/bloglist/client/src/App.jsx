@@ -1,15 +1,19 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import './index.css'
-import Togglable from './components/Togglable'
-import BlogForm from './components/BlogForm'
+import Header from './components/Header'
 import BlogList from './components/BlogList'
+import UserList from './components/UserList'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import UserInfo from './components/UserInfo'
+import BlogInfo from './components/BlogInfo'
 
 import { useSelector, useDispatch } from 'react-redux'
-import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs } from './reducers/blogReducer'
-import { initializeUser, logout } from './reducers/userReducer'
+import { initializeUser } from './reducers/authReducer'
+import { initializeUsers } from './reducers/usersReducer'
+
+import { Routes, Route } from 'react-router-dom'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -18,15 +22,10 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeUser())
     dispatch(initializeBlogs())
-  }, [])
+    dispatch(initializeUsers())
+  }, [dispatch])
 
   const user = useSelector(state => state.user)
-
-  const blogFormRef = useRef()
-
-  const handleLogout = () => {
-    dispatch(logout())
-  }
 
   return (
     <div>
@@ -39,14 +38,14 @@ const App = () => {
       )}
       {user && (
         <>
-          <h2>blogs</h2>
+          <Header />
           <Notification />
-          <em>{user.name || user.username} logged in &nbsp;</em>
-          <button onClick={handleLogout}>log out</button>
-          <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm />
-          </Togglable>
-          <BlogList />
+          <Routes>
+            <Route path='/blogs/:id' element={<BlogInfo />} />
+            <Route path='/users/:id' element={<UserInfo />} />
+            <Route path='/users' element={<UserList />} />
+            <Route path='/' element={<BlogList />} />
+          </Routes>
         </>
       )}
     </div>

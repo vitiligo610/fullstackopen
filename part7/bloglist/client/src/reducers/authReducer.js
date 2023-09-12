@@ -5,7 +5,7 @@ import { setNotification } from './notificationReducer'
 import blogService from '../services/blogs'
 import loginService from '../services/login'
 
-const userSlice = createSlice({
+const authSlice = createSlice({
   name: 'user',
   initialState: null,
   reducers: {
@@ -21,7 +21,7 @@ const userSlice = createSlice({
   }
 })
 
-export const { initUser, loginUser, logoutUser } = userSlice.actions
+export const { initUser, loginUser, logoutUser } = authSlice.actions
 
 export const initializeUser = () => {
   return async dispatch => {
@@ -56,4 +56,4 @@ export const logout = () => {
   }
 }
 
-export default userSlice.reducer
+export default authSlice.reducer
