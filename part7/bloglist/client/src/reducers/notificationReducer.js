@@ -15,7 +15,7 @@ const notificationSlice = createSlice({
 
 export const { showNotification, hideNotification } = notificationSlice.actions
 
-export const setNotification = (dispatch, type, message) => {
+export const setNotification = (type, message) => {
   return async dispatch => {
     if (type === 'success')
       dispatch(showNotification(`SUCCESS${message}`))

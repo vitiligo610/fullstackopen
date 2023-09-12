@@ -4,6 +4,7 @@ import './index.css'
 import Togglable from './components/Togglable'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
+import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
@@ -25,8 +26,6 @@ const App = () => {
     dispatch(initializeBlogs())
   }, [])
   
-  const blogs = useSelector(state => state.blogs)
-  console.log('blogs', blogs)
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
@@ -38,40 +37,10 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const createBlog = async (blogToAdd) => {
+  const createBlog = (blogToAdd) => {
     blogFormRef.current.toggleVisibility()
-    try {
-      await dispatch(createNew(blogToAdd))
-      dispatch(setNotification(dispatch, 'success', `a new blog '${blogToAdd.title}' by '${blogToAdd.author}' added`))
-    } catch (error) {
-      dispatch(setNotification(dispatch, 'error', `Cannot add blog '${blogToAdd.title}'`))
-    }
-  }
-
-  const byLikes = (b1, b2) => b2.likes - b1.likes
-
-  const updateBlog = async (blogToUpdate) => {
-    try {
-      await dispatch(updateLikesOf(blogToUpdate))
-      dispatch(setNotification(dispatch, 'success', `Blog '${blogToUpdate.title}' was successfully updated`))
-    } catch (error) {
-      dispatch(setNotification(dispatch, 'error', `Cannot update blog '${blogToUpdate.title}'`))
-    }
-  }
-
-  const removeBlog = async (blogToDelete) => {
-    if (
-      window.confirm(
-        `Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`
-      )
-    ) {
-      try {
-        await dispatch(deleteBlog(blogToDelete))
-        dispatch(setNotification(dispatch, 'success', `Blog '${blogToDelete.title}' was successfully deleted`))
-      } catch (error) {
-        dispatch(setNotification(dispatch, 'error', `Cannot remove blog '${blogToDelete.title}'`))
-      }
-    }
+    dispatch(createNew(blogToAdd))
+    dispatch(setNotification('success', `a new blog '${blogToAdd.title}' by '${blogToAdd.author}' added`))
   }
 
   const handleLogin = async (e) => {
@@ -86,11 +55,11 @@ const App = () => {
 
       blogService.setToken(user.token)
       setUser(user)
-      dispatch(setNotification(dispatch, 'success', `Successfully logged in as ${username}`))
+      dispatch(setNotification('success', `Successfully logged in as ${username}`))
       setUsername('')
       setPassword('')
     } catch (error) {
-      dispatch(setNotification(dispatch, 'error', `Wrong Credentials`))
+      dispatch(setNotification('error', `Wrong Credentials`))
     }
   }
 
@@ -118,19 +87,12 @@ const App = () => {
         <>
           <h2>blogs</h2>
           <Notification />
-          {user.name || user.username} logged in &nbsp;
+          <em>{user.name || user.username} logged in &nbsp;</em>
           <button onClick={handleLogout}>log out</button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm createBlog={createBlog} />
           </Togglable>
-          {blogs.map((blog, index) => (
-            <Blog
-              key={index}
-              blog={blog}
-              updateBlog={updateBlog}
-              removeBlog={removeBlog}
-            />
-          ))}
+          <BlogList />
         </>
       )}
     </div>
