@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
-import PropTypes from 'prop-types'
+import { useEffect, useRef } from 'react'
 import './index.css'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
@@ -53,13 +52,5 @@ const App = () => {
     </div>
   )
 }
-
-// LoginForm.propTypes = {
-//   username: PropTypes.string.isRequired,
-//   password: PropTypes.string.isRequired,
-//   handleUsernameChange: PropTypes.func.isRequired,
-//   handlePasswordChange: PropTypes.func.isRequired,
-//   handleSubmit: PropTypes.func.isRequired
-// }
 
 export default App
