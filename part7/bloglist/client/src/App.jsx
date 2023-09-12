@@ -16,8 +16,6 @@ const App = () => {
   const dispatch = useDispatch()
 
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -124,7 +122,7 @@ const App = () => {
       {user && (
         <>
           <h2>blogs</h2>
-          <Notification error={errorMessage} success={successMessage} />
+          <Notification />
           {user.name || user.username} logged in &nbsp;
           <button onClick={handleLogout}>log out</button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
