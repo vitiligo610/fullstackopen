@@ -6,6 +6,10 @@ const blogReducer = (state = [], action) => {
       return action.payload
     case 'ADD_BLOG':
       return state.concat(action.payload)
+    case 'UPDATE_BLOG':
+      return state.map(blog => blog.id !== action.payload.id ? blog : action.payload)
+    case 'DELETE_BLOG':
+      return state.filter(blog => blog.id !== action.payload)
     default:
       return state
   }
@@ -16,19 +20,34 @@ export const initializeBlogs = () => {
     const blogs = await blogService.getAll()
     dispatch({
       type: 'INIT_BLOG',
-      payload: [
-        ...blogs
-      ]
+      payload: blogs
     })
   }
 }
 
-export const addBlog = blogToAdd => {
+export const addBlog = blogObject => {
   return async dispatch => {
-    const addedBlog = await blogService.create(blogToAdd)
     dispatch({
       type: 'ADD_BLOG',
-      payload: addedBlog
+      payload: blogObject
+    })
+  }
+}
+
+export const updateBlog = blogObject => {
+  return async dispatch => {
+    dispatch({
+      type: 'UPDATE_BLOG',
+      payload: blogObject
+    })
+  }
+}
+
+export const deleteBlog = blogId => {
+  return async dispatch => {
+    dispatch({
+      type: 'DELETE_BLOG',
+      payload: blogId
     })
   }
 }

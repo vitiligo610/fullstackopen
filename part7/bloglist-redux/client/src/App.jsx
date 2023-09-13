@@ -10,7 +10,7 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 
 import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, addBlog } from './reducers/blogReducer'
+import { initializeBlogs, addBlog, updateBlog, deleteBlog } from './reducers/blogReducer'
 import { initializeUser, login, logout } from './reducers/authReducer'
 
 const App = () => {
@@ -25,15 +25,6 @@ const App = () => {
     dispatch(initializeBlogs())
   }, [])
 
-  // useEffect(() => {
-  //   const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-  //   if (loggedUserJSON) {
-  //     const user = JSON.parse(loggedUserJSON)
-  //     setUser(user)
-  //     blogService.setToken(user.token)
-  //   }
-  // }, [])
-
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
@@ -42,21 +33,33 @@ const App = () => {
   const createBlog = async blogObject => {
     blogFormRef.current.toggleVisibility()
     try {
-      dispatch(addBlog(blogObject))
-      dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
+      await blogService
+        .create(blogObject)
+        .then(() => {
+          dispatch(addBlog(blogObject))
+          dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
+        })
     } catch (error) {
       dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
     }
   }
 
-  const updateBlog = async blogToUpdate => {
-    // try {
-    //   await blogService
-    //     .update(blogToUpdate)
-    //     .then(updatedBlog => dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`))) 
-    // } catch (error) {
-    //   dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
-    // }
+  const increaseLikes = async blogToUpdate => {
+    const updatedBlog = {
+      ...blogToUpdate,
+      likes: blogToUpdate.likes + 1
+    }
+
+    try {
+      await blogService
+        .update(updatedBlog)
+        .then(() => {
+          dispatch(updateBlog(updatedBlog))
+          dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`))
+        })
+    } catch (error) {
+      dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
+    }
   }
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
@@ -65,9 +68,11 @@ const App = () => {
     if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
       try {
         await blogService
-          .remove(blogToDelete)
-          .then(() => dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully removed`)))
-        setBlogs(blogs.filter(n => n.id !== blogToDelete.id))
+          .remove(blogToDelete.id)
+          .then(() => {
+            dispatch(deleteBlog(blogToDelete.id))
+            dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully removed`))
+          })
       } catch (error) {
         dispatch(setNotification('error', `Cannot remove blog '${blogToDelete.title}'`))
       }
@@ -75,21 +80,6 @@ const App = () => {
   }
 
   const handleLogin = async e => {
-    // e.preventDefault()
-    // console.log('logging in with', username, password)
-    // try {
-    //   const user = await loginService.login({
-    //     username, password
-    //   })
-    //   window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
-
-    //   blogService.setToken(user.token)
-    //   setUser(user)
-    //   setUsername('')
-    //   setPassword('')
-    // } catch (error) {
-    //   dispatch(setNotification('error', 'Wrong credentials'))
-    // }
     e.preventDefault()
     try {
       dispatch(login(username, password))
@@ -102,6 +92,9 @@ const App = () => {
   const handleLogout = () => {
     dispatch(logout())
   }
+
+
+  const sortedBlogs = [...blogs].sort(byLikes)
 
   return (
     <div>
@@ -129,8 +122,8 @@ const App = () => {
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm createBlog={createBlog} />
           </Togglable>
-          {blogs.sort(byLikes).map((blog, index) =>
-            <Blog key={index} blog={blog} updateBlog={updateBlog} removeBlog={removeBlog} />
+          {sortedBlogs.map((blog, index) =>
+            <Blog key={index} blog={blog} updateBlog={increaseLikes} removeBlog={removeBlog} />
           )}
         </>
       }

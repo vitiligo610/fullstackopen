@@ -3,6 +3,7 @@ import { useState } from 'react'
 const Blog = ({ blog, updateBlog, removeBlog }) => {
   const [detailsVisible, setDetailsVisible] = useState(false)
   const [blogObject, setBlogObject] = useState(blog)
+  console.log('blogObject', blogObject)
 
   const toggleDetailsVisibility = () => {
     setDetailsVisible(!detailsVisible)
@@ -13,7 +14,7 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
       ...blogObject,
       likes: blogObject.likes + 1
     }
-    await updateBlog(updatedBlog)
+    await updateBlog(blogObject)
     setBlogObject(updatedBlog)
   }
 

@@ -26,8 +26,8 @@ const update = async blogObject => {
   return request.data
 }
 
-const remove = async blogObject => {
-  const request = await axios.delete(`${baseUrl}/${blogObject.id}`, config)
+const remove = async blogId => {
+  const request = await axios.delete(`${baseUrl}/${blogId}`, config)
   return request.data
 }
 

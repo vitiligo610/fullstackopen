@@ -39,7 +39,7 @@ export const login = (username, password) => {
   return async dispatch => {
     const user = await loginService.login({ username, password })
     blogService.setToken(user.token)
-    window.localStorage.setItem('loggedBlogAppUser', user)
+    window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
     dispatch({
       type: 'LOGIN',
       payload: user
