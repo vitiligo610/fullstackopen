@@ -7,6 +7,9 @@ const blogSlice = createSlice({
   name: 'blogs',
   initialState: [],
   reducers: {
+    commment: (state, action) => {
+      return action.payload
+    },
     update: (state, action) => {
       return action.payload
     },
@@ -22,7 +25,7 @@ const blogSlice = createSlice({
   }
 })
 
-export const { setAllBlogs, append, update, remove } = blogSlice.actions
+export const { setAllBlogs, append, update, remove, comment } = blogSlice.actions
 
 export const initializeBlogs = () => {
   return async dispatch => {
@@ -53,6 +56,7 @@ export const updateLikesOf = blogObject => {
       }
       const updatedBlogFromServer = await blogService.update(updatedBlog)
       dispatch(update(blogs.map(blog => blog.id !== updatedBlogFromServer.id ? blog : updatedBlogFromServer)))
+      console.log('state', getState())
     } catch (error) {
       dispatch(setNotification('error', `Cannot update blog '${blogToUpdate.title}'`))
     }
@@ -68,6 +72,27 @@ export const removeBlog = blogObject => {
       dispatch(remove(blogs.filter(blog => blog.id !== blogToDelete.id)))
     } catch (error) {
       dispatch(setNotification('error', `Cannot remove blog '${blogToDelete.title}'`))
+    }
+  }
+}
+
+export const commentBlog = (blogObject, comment) => {
+  return async (dispatch, getState) => {
+    try {
+      const { blogs } = getState()
+      const blogToComment = blogs.find(blog => blog.id === blogObject.id)
+      const commentedBlog = {
+        ...blogToComment,
+        comments: [
+          ...blogToComment.comments,
+          comment
+        ]
+      }
+      await blogService.comment(commentedBlog, comment)
+      dispatch(comment(blogs.map(blog => blog.id !== commentedBlog.id ? blog : commentedBlog)))
+      console.log('getState.comments ', getState())
+    } catch (error) {
+      dispatch(setNotification('error', `Cannot add comment on blog '${blogObject.title}'`))
     }
   }
 }

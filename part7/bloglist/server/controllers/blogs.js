@@ -15,7 +15,7 @@ blogsRouter.get('/', async (request, response) => {
 
 blogsRouter.get('/:id', async (request, response) => {
   const id = request.params.id
-  const blog = await Blog.findById(id)
+  const blog = await Blog.findById(id).populate('user', { username: 1, name: 1 })
   if (blog) {
     response.status(200).json(blog)
   } else {
