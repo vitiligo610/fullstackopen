@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import './index.css'
 import Togglable from './components/Togglable'
@@ -11,19 +11,18 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 import { setNotification } from './reducers/notificationReducer'
+import { initializeBlogs, addBlog } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const [blogs, setBlogs] = useState([])
+  // const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )
+    dispatch(initializeBlogs())
   }, [])
 
   useEffect(() => {
@@ -35,30 +34,28 @@ const App = () => {
     }
   }, [])
 
+  const blogs = useSelector(state => state.blogs)
+
   const blogFormRef = useRef()
 
   const createBlog = async blogObject => {
     blogFormRef.current.toggleVisibility()
     try {
-      await blogService
-        .create(blogObject)
-        .then((returnedBlog) => {
-          setBlogs(blogs.concat(returnedBlog))
-          dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
-        })
+      dispatch(addBlog(blogObject))
+      dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
     } catch (error) {
       dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
     }
   }
 
   const updateBlog = async blogToUpdate => {
-    try {
-      await blogService
-        .update(blogToUpdate)
-        .then(updatedBlog => dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`)))
-    } catch (error) {
-      dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
-    }
+    // try {
+    //   await blogService
+    //     .update(blogToUpdate)
+    //     .then(updatedBlog => dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`))) 
+    // } catch (error) {
+    //   dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
+    // }
   }
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
