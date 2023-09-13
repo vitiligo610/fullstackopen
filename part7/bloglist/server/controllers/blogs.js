@@ -70,8 +70,9 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: likes
   }
 
-  await Blog.findByIdAndUpdate(id, blog, { new: true })
-  response.status(200).json(blog)
+  await Blog
+    .findByIdAndUpdate(id, blog, { new: true })
+    .then(updatedBlog => response.status(200).json(updatedBlog))
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
