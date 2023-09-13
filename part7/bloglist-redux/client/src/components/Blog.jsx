@@ -11,9 +11,9 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
   const increaseLikes = async () => {
     const updatedBlog = {
       ...blogObject,
-      likes: blogObject.likes++
+      likes: blogObject.likes + 1
     }
-    await updateBlog(blogObject)
+    await updateBlog(updatedBlog)
     setBlogObject(updatedBlog)
   }
 

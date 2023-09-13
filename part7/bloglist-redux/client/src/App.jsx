@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import './index.css'
 import Togglable from './components/Togglable'
@@ -9,10 +10,12 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
+import { setNotification } from './reducers/notificationReducer'
+
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
-  const [errorMessage, setErrorMessage] = useState(null)
-  const [successMessage, setSuccessMessage] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -25,8 +28,7 @@ const App = () => {
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON)
-    {
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -35,45 +37,41 @@ const App = () => {
 
   const blogFormRef = useRef()
 
-  const createBlog = (blogObject) => {
+  const createBlog = async blogObject => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        setBlogs(blogs.concat(returnedBlog))
-      })
-
-    setSuccessMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-    setTimeout(() => {
-      setSuccessMessage(null)
-    }, 5000)
+    try {
+      await blogService
+        .create(blogObject)
+        .then((returnedBlog) => {
+          setBlogs(blogs.concat(returnedBlog))
+          dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
+        })
+    } catch (error) {
+      dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
+    }
   }
 
   const updateBlog = async blogToUpdate => {
     try {
       await blogService
         .update(blogToUpdate)
-      setSuccessMessage(`Blog ${blogToUpdate.title} was successfully updated`)
-      setTimeout(() => setSuccessMessage(null), 2000)
+        .then(updatedBlog => dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`)))
     } catch (error) {
-      setErrorMessage(`Cannot update blog ${blogToUpdate.title}`)
-      setTimeout(() => setErrorMessage(null), 2000)
+      dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
     }
   }
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
   const removeBlog = async blogToDelete => {
-    if (window.confirm(`Remove blog ${blogToDelete.title} by ${blogToDelete.author}`)) {
+    if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
       try {
         await blogService
           .remove(blogToDelete)
-        setSuccessMessage(`Blog ${blogToDelete.title} was successfully deleted`)
-        setTimeout(() => setSuccessMessage(null), 2000)
+          .then(() => dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully removed`)))
         setBlogs(blogs.filter(n => n.id !== blogToDelete.id))
       } catch (error) {
-        setErrorMessage(`Cannot remove blog ${blogToDelete.title}`)
-        setTimeout(() => setErrorMessage(null), 2000)
+        dispatch(setNotification('error', `Cannot remove blog '${blogToDelete.title}'`))
       }
     }
   }
@@ -92,10 +90,7 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      setErrorMessage('Wrong Credentials')
-      setTimeout(() => {
-        setErrorMessage(null)
-      }, 5000)
+      dispatch(setNotification('error', 'Wrong credentials'))
     }
   }
 
@@ -110,7 +105,7 @@ const App = () => {
         !user &&
         <>
           <h2>Log in to application</h2>
-          <Notification error={errorMessage} success={successMessage} />
+          <Notification />
           <LoginForm
             username={username}
             password={password}
@@ -124,7 +119,7 @@ const App = () => {
         user &&
         <>
           <h2>blogs</h2>
-          <Notification error={errorMessage} success={successMessage} />
+          <Notification />
           {user.name || user.username} logged in &nbsp;
           <button onClick={handleLogout}>log out</button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
@@ -143,7 +138,7 @@ LoginForm.propTypes = {
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.string.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 }
 

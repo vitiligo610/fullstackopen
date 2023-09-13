@@ -1,18 +1,22 @@
-const Notification = ({ error, success }) => {
-  if (!error && !success)
-  {
+import { useSelector } from 'react-redux'
+
+const Notification = () => {
+  const notification = useSelector(state => state.notification)
+
+  let content, className
+  if (notification) {
+    content = notification.includes('SUCCESS') ? notification.substring(7) : notification.substring(5)
+    className = notification.includes('SUCCESS') ? 'success' : 'error'
+  }
+
+  if (!notification) {
     return null
   }
 
   return (
-    <>
-      {error && <div className="error">
-        {error}
-      </div>}
-      {success && <div className="success">
-        {success}
-      </div>}
-    </>
+    <div className={className}>
+      {content}
+    </div>
   )
 }
 
