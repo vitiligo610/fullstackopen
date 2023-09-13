@@ -9,13 +9,12 @@ blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog
     .find({})
     .populate('user', { username: 1, name: 1 })
-
   response.json(blogs)
 })
 
 blogsRouter.get('/:id', async (request, response) => {
   const id = request.params.id
-  const blog = await Blog.findById(id).populate('user', { username: 1, name: 1 })
+  const blog = await Blog.findById(id)
   if (blog) {
     response.status(200).json(blog)
   } else {
@@ -70,9 +69,8 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: likes
   }
 
-  await Blog
-    .findByIdAndUpdate(id, blog, { new: true })
-    .then(updatedBlog => response.status(200).json(updatedBlog))
+  const updatedNote = await Blog.findByIdAndUpdate(id, blog, { new: true })
+  response.status(200).json(updatedNote)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
@@ -88,27 +86,6 @@ blogsRouter.delete('/:id', async (request, response) => {
   } else {
     response.status(401).json({ error: 'unauthorized action' })
   }
-})
-
-blogsRouter.post('/:id/comments', async (request, response) => {
-  const id = request.params.id
-  const blog = await Blog
-    .findById(id)
-    .populate('user', { name: 1, username: 1 })
-
-  if (!blog) {
-    return response.status(404).end()
-  }
-
-  const comment = request.body.comment
-
-  if (!comment || comment.length == 0)
-    return response.status(400).json({ error: `comment can't be empty` })
-
-  blog.comments = blog.comments ? blog.comments.concat(comment) : [ comment ]
-
-  const updatedBlog = await blog.save()
-  response.json(updatedBlog)
 })
 
 module.exports = blogsRouter

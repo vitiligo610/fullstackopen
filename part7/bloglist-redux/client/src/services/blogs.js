@@ -31,17 +31,11 @@ const remove = async blogObject => {
   return request.data
 }
 
-const comment = async (blogObject, comment) => {
-  const request = await axios.post(`${baseUrl}/${blogObject.id}/comments`, { comment })
-  return request.data
-}
-
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
   setToken,
   getAll,
   create,
   update,
-  remove,
-  comment
+  remove
 }
