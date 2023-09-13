@@ -8,33 +8,34 @@ import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
-import loginService from './services/login'
 
 import { setNotification } from './reducers/notificationReducer'
 import { initializeBlogs, addBlog } from './reducers/blogReducer'
+import { initializeUser, login, logout } from './reducers/authReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  // const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
 
   useEffect(() => {
+    dispatch(initializeUser())
     dispatch(initializeBlogs())
   }, [])
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON)
-      setUser(user)
-      blogService.setToken(user.token)
-    }
-  }, [])
+  // useEffect(() => {
+  //   const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
+  //   if (loggedUserJSON) {
+  //     const user = JSON.parse(loggedUserJSON)
+  //     setUser(user)
+  //     blogService.setToken(user.token)
+  //   }
+  // }, [])
 
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
 
   const blogFormRef = useRef()
 
@@ -74,26 +75,32 @@ const App = () => {
   }
 
   const handleLogin = async e => {
-    e.preventDefault()
-    console.log('logging in with', username, password)
-    try {
-      const user = await loginService.login({
-        username, password
-      })
-      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
+    // e.preventDefault()
+    // console.log('logging in with', username, password)
+    // try {
+    //   const user = await loginService.login({
+    //     username, password
+    //   })
+    //   window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
-      blogService.setToken(user.token)
-      setUser(user)
-      setUsername('')
-      setPassword('')
+    //   blogService.setToken(user.token)
+    //   setUser(user)
+    //   setUsername('')
+    //   setPassword('')
+    // } catch (error) {
+    //   dispatch(setNotification('error', 'Wrong credentials'))
+    // }
+    e.preventDefault()
+    try {
+      dispatch(login(username, password))
+      dispatch(setNotification('success', `logged in successfully as ${username}`))
     } catch (error) {
       dispatch(setNotification('error', 'Wrong credentials'))
     }
   }
 
   const handleLogout = () => {
-    window.localStorage.clear('loggedBlogAppUser')
-    setUser(null)
+    dispatch(logout())
   }
 
   return (
