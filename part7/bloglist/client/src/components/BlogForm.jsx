@@ -10,9 +10,9 @@ const BlogForm = ({ toggleForm }) => {
   const author = useField('text')
   const url = useField('text')
 
-  const addBlog = e => {
+  const addBlog = async e => {
     e.preventDefault()
-    dispatch(createBlog({
+    await dispatch(createBlog({
       title: title.value,
       author: author.value,
       url: url.value

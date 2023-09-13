@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { updateLikesOf, removeBlog } from '../reducers/blogReducer'
+import { updateLikesOf } from '../reducers/blogReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
 const BlogInfo = () => {
@@ -16,20 +16,20 @@ const BlogInfo = () => {
     dispatch(setNotification('success', `blog '${blog.title}' was successfully updated`))
   }
 
-  const remove = () => {
-    console.log('removed')
-  }
-
   if (!blog)
     return null
 
-  console.log('blog', blog)
+  console.log('blog comments ', blog.comments)
   return (
     <div>
       <h1>{blog.title}</h1>
       <a href={blog.url}>{blog.url}</a><br />
       <span>{blog.likes} likes <button onClick={increaseLikes}>like</button></span><br />
-      <span>added by {blog.user.name || blog.user.username} <button onClick={remove}>remove</button></span>
+      <span>added by {blog.user.name || blog.user.username}</span>
+      <h2>comments</h2>
+      <ul>
+        {blog.comments.map((comment, idx) => <li key={idx}>{comment}</li>)}
+      </ul>
     </div>
   )
 }
