@@ -1,24 +1,20 @@
-import { useState } from 'react'
+import { useField } from '../hooks'
 
 const BlogForm = ({ createBlog }) => {
-  const [newBlog, setNewBlog] = useState({
-    title: '',
-    author: '',
-    url: ''
-  })
+  const title = useField('text')
+  const author = useField('text')
+  const url = useField('text')
 
   const addBlog = e => {
     e.preventDefault()
     createBlog({
-      title: newBlog.title,
-      author: newBlog.author,
-      url: newBlog.url
+      title: title.value,
+      author: author.value,
+      url: url.value
     })
-    setNewBlog({
-      title: '',
-      author: '',
-      url: ''
-    })
+    title.reset()
+    author.reset()
+    url.reset()
   }
 
   return (
@@ -26,29 +22,29 @@ const BlogForm = ({ createBlog }) => {
       <h2>create new</h2>
       <div>
         title: <input
-          type='text'
-          value={newBlog.title}
-          name='Title'
+          name='title'
+          type={title.type}
+          value={title.value}
+          onChange={title.onChange}
           required
-          onChange={({ target }) => setNewBlog(prev => ({ ...prev, title: target.value }))}
         />
       </div>
       <div>
         author: <input
-          type='text'
-          value={newBlog.author}
-          name='Author'
+          name='author'
+          type={author.type}
+          value={author.value}
+          onChange={author.onChange}
           required
-          onChange={({ target }) => setNewBlog(prev => ({ ...prev, author: target.value }))}
         />
       </div>
       <div>
         url: <input
-          type='text'
-          value={newBlog.url}
-          name='Url'
+          name='url'
+          type={url.type}
+          value={url.value}
+          onChange={url.onChange}
           required
-          onChange={({ target }) => setNewBlog(prev => ({ ...prev, url: target.value }))}
         />
       </div>
       <button>create</button>
