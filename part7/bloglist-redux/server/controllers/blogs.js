@@ -23,7 +23,7 @@ blogsRouter.get('/:id', async (request, response) => {
 })
 
 blogsRouter.post('/', async (request, response) => {
-  let { title, author, url, likes, userId } = request.body
+  let { title, author, url, likes, comments, userId } = request.body
   
   if (!title || !author || !url) {
     return response.status(400).json({ error: 'content missing' })
@@ -44,10 +44,11 @@ blogsRouter.post('/', async (request, response) => {
   const user = await User.findById(decodedToken.id)
 
   const blog = new Blog({
-    title: title,
-    author: author,
-    url: url,
-    likes: likes,
+    title,
+    author,
+    url,
+    likes,
+    comments,
     user: user.id
   })
 
@@ -59,14 +60,15 @@ blogsRouter.post('/', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const { title, author, url, likes } = request.body
+  const { title, author, url, likes, comments } = request.body
   const id = request.params.id
 
   const blog = {
-    title: title,
-    author: author,
-    url: url,
-    likes: likes
+    title,
+    author,
+    url,
+    likes,
+    comments
   }
 
   const updatedNote = await Blog.findByIdAndUpdate(id, blog, { new: true })
