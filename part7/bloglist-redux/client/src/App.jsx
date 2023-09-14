@@ -18,7 +18,6 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  // const [user, setUser] = useState(null)
 
   useEffect(() => {
     dispatch(initializeUser())
@@ -30,13 +29,15 @@ const App = () => {
 
   const blogFormRef = useRef()
 
+  const toggleForm = () => blogFormRef.current.toggleVisibility()
+
   const createBlog = async blogObject => {
     blogFormRef.current.toggleVisibility()
     try {
       await blogService
         .create(blogObject)
-        .then(() => {
-          dispatch(addBlog(blogObject))
+        .then(returnedBlog => {
+          dispatch(addBlog(returnedBlog))
           dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
         })
     } catch (error) {
@@ -120,7 +121,7 @@ const App = () => {
           {user.name || user.username} logged in &nbsp;
           <button onClick={handleLogout}>log out</button>
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm createBlog={createBlog} />
+            <BlogForm toggleForm={toggleForm} createBlog={createBlog} />
           </Togglable>
           {sortedBlogs.map((blog, index) =>
             <Blog key={index} blog={blog} updateBlog={increaseLikes} removeBlog={removeBlog} />

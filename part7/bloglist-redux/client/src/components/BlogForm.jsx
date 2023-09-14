@@ -1,24 +1,54 @@
 import { useField } from '../hooks'
+import blogService from '../services/blogs'
+import { setNotification } from '../reducers/notificationReducer'
+import { useSelector, useDispatch } from 'react-redux'
+import { addBlog } from '../reducers/blogReducer'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ toggleForm }) => {
+  const dispatch = useDispatch()
+
   const title = useField('text')
   const author = useField('text')
   const url = useField('text')
 
-  const addBlog = e => {
+  const user = useSelector(state => state.user)
+
+  const createBlog = async e => {
+    // e.preventDefault()
+    // createBlog({
+    //   title: title.value,
+    //   author: author.value,
+    //   url: url.value
+    // })
+    // title.reset()
+    // author.reset()
+    // url.reset()
+    // toggleForm()
     e.preventDefault()
-    createBlog({
+    const blogObject = {
       title: title.value,
       author: author.value,
       url: url.value
-    })
+    }
+    try {
+      await blogService
+        .create(blogObject)
+        .then(returnedBlog => {
+          dispatch(addBlog({ ...returnedBlog, user: { username: user.username, name: user.name, id: returnedBlog.user.id }}))
+          console.error('returnedBlog ', returnedBlog)
+          dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
+        })
+    } catch (error) {
+      dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
+    }
     title.reset()
     author.reset()
     url.reset()
+    toggleForm()
   }
 
   return (
-    <form onSubmit={addBlog}>
+    <form onSubmit={createBlog}>
       <h2>create new</h2>
       <div>
         title: <input
