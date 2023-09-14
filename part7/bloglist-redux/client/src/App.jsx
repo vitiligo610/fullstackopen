@@ -1,34 +1,49 @@
-import { useState, useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import PropTypes from 'prop-types'
 import './index.css'
-import Togglable from './components/Togglable'
 import BlogList from './components/BlogList'
-import Blog from './components/Blog'
-import BlogForm from './components/BlogForm'
+import Header from './components/Header'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import blogService from './services/blogs'
 
-import { setNotification } from './reducers/notificationReducer'
-import { initializeBlogs, addBlog, updateBlog, deleteBlog } from './reducers/blogReducer'
-import { initializeUser, login, logout } from './reducers/authReducer'
+import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUser } from './reducers/authReducer'
 
 const App = () => {
   const dispatch = useDispatch()
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
 
   useEffect(() => {
     dispatch(initializeUser())
     dispatch(initializeBlogs())
   }, [])
 
-  const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
-  // const createBlog = async blogObject => {
+  return (
+    <div>
+      {!user && <LoginForm />}
+      {
+        user &&
+        <>
+          <h2>blogs</h2>
+          <Notification />
+          <Header />
+          <BlogList />
+        </>
+      }
+    </div>
+  )
+}
+
+export default App
+
+
+
+
+
+
+
+// const createBlog = async blogObject => {
   //   blogFormRef.current.toggleVisibility()
   //   try {
   //     await blogService
@@ -60,8 +75,6 @@ const App = () => {
   //   }
   // }
 
-  const byLikes = (b1, b2) => b2.likes - b1.likes
-
   // const removeBlog = async blogToDelete => {
   //   if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
   //     try {
@@ -76,41 +89,3 @@ const App = () => {
   //     }
   //   }
   // }
-
-  const handleLogout = () => {
-    dispatch(logout())
-  }
-
-  return (
-    <div>
-      {
-        !user &&
-        <>
-          <h2>Log in to application</h2>
-          <Notification />
-          <LoginForm />
-        </>
-      }
-      {
-        user &&
-        <>
-          <h2>blogs</h2>
-          <Notification />
-          {user.name || user.username} logged in &nbsp;
-          <button onClick={handleLogout}>log out</button>
-          <BlogList />
-        </>
-      }
-    </div>
-  )
-}
-
-LoginForm.propTypes = {
-  username: PropTypes.string.isRequired,
-  password: PropTypes.string.isRequired,
-  handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.func.isRequired,
-  handleSubmit: PropTypes.func.isRequired
-}
-
-export default App
