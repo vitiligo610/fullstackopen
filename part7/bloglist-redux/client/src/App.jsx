@@ -1,13 +1,16 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.css'
-import BlogList from './components/BlogList'
-import Header from './components/Header'
-import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
+import Notification from './components/Notification'
+import Header from './components/Header'
+import BlogList from './components/BlogList'
+import UserList from './components/UserList'
+import { Routes, Route } from 'react-router-dom'
 
-import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser } from './reducers/authReducer'
+import { initializeBlogs } from './reducers/blogReducer'
+import { initializeUsers } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -15,6 +18,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeUser())
     dispatch(initializeBlogs())
+    dispatch(initializeUsers())
   }, [])
 
   const user = useSelector(state => state.user)
@@ -25,10 +29,11 @@ const App = () => {
       {
         user &&
         <>
-          <h2>blogs</h2>
-          <Notification />
-          <Header />
-          <BlogList />
+        <Header />
+          <Routes>
+            <Route path='/users' element={<UserList />} />
+            <Route path='/' element={<BlogList />} />
+          </Routes>
         </>
       }
     </div>
@@ -36,56 +41,3 @@ const App = () => {
 }
 
 export default App
-
-
-
-
-
-
-
-// const createBlog = async blogObject => {
-  //   blogFormRef.current.toggleVisibility()
-  //   try {
-  //     await blogService
-  //       .create(blogObject)
-  //       .then(returnedBlog => {
-  //         dispatch(addBlog(returnedBlog))
-  //         dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
-  //       })
-  //   } catch (error) {
-  //     dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
-  //   }
-  // }
-
-  // const increaseLikes = async blogToUpdate => {
-  //   const updatedBlog = {
-  //     ...blogToUpdate,
-  //     likes: blogToUpdate.likes + 1
-  //   }
-
-  //   try {
-  //     await blogService
-  //       .update(updatedBlog)
-  //       .then(() => {
-  //         dispatch(updateBlog(updatedBlog))
-  //         dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`))
-  //       })
-  //   } catch (error) {
-  //     dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
-  //   }
-  // }
-
-  // const removeBlog = async blogToDelete => {
-  //   if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
-  //     try {
-  //       await blogService
-  //         .remove(blogToDelete.id)
-  //         .then(() => {
-  //           dispatch(deleteBlog(blogToDelete.id))
-  //           dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully removed`))
-  //         })
-  //     } catch (error) {
-  //       dispatch(setNotification('error', `Cannot remove blog '${blogToDelete.title}'`))
-  //     }
-  //   }
-  // }

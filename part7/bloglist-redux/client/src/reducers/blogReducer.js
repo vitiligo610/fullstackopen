@@ -26,30 +26,24 @@ export const initializeBlogs = () => {
 }
 
 export const addBlog = blogObject => {
-  return async dispatch => {
-    dispatch({
+    return {
       type: 'ADD_BLOG',
       payload: blogObject
-    })
-  }
+    }
 }
 
 export const updateBlog = blogObject => {
-  return async dispatch => {
-    dispatch({
+    return {
       type: 'UPDATE_BLOG',
       payload: blogObject
-    })
-  }
+    }
 }
 
 export const deleteBlog = blogId => {
-  return async dispatch => {
-    dispatch({
+    return {
       type: 'DELETE_BLOG',
       payload: blogId
-    })
-  }
+    }
 }
 
 export default blogReducer

@@ -17,22 +17,19 @@ const authReducer = (state = null, action) => {
 }
 
 export const initializeUser = () => {
-  return async (dispatch, getState) => {
     const loggedBlogAppUser = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedBlogAppUser) {
       const user = JSON.parse(loggedBlogAppUser)
       blogService.setToken(user.token)
-      dispatch({
+      return {
         type: 'INIT_USER',
         payload: user
-      })
-      return
+      }
     }
-    dispatch({
+    return {
       type: 'INIT_USER',
       payload: null
-    })
-  }
+    }
 }
 
 export const login = (username, password) => {
@@ -48,12 +45,10 @@ export const login = (username, password) => {
 }
 
 export const logout = () => {
-  return async dispatch => {
-    window.localStorage.clear()
-    dispatch({
-      type: 'LOGOUT',
-      payload: null
-    })
+  window.localStorage.clear()
+  return {
+    type: 'LOGOUT',
+    payload: null
   }
 }
 
