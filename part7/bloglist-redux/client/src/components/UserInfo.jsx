@@ -1,6 +1,8 @@
+import { Link } from 'react-router-dom'
+
 const UserInfo = ({ user }) => {
   if (!user)
-    return <h2>loading data...</h2>
+    return <h3><em>loading data...</em></h3>
 
   return (
     <div>
@@ -8,7 +10,9 @@ const UserInfo = ({ user }) => {
       <h2>added blogs</h2>
       <ul>
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <li key={blog.id}>
+            <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
+          </li>
         ))}
       </ul>
     </div>

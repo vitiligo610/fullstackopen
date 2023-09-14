@@ -21,7 +21,7 @@ export const setNotification = (type, message) => {
         type: 'SHOW_NOTIFICATION',
         payload: `ERROR ${message}`
       })
-    setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
+    setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 2000)
   }
 }
 

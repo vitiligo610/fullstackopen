@@ -9,7 +9,7 @@ const BlogInfo = ({ blog }) => {
   const navigate = useNavigate()
 
   if (!blog)
-    return <h2>loading data...</h2>
+    return <h3><em>loading data...</em></h3>
 
   const increaseLikes = async () => {
     const updatedBlog = {
@@ -43,6 +43,24 @@ const BlogInfo = ({ blog }) => {
     }
   }
 
+  const commentBlog = async e => {
+    e.preventDefault()
+    const updatedBlog = {
+      ...blog,
+      comments: [ ...blog.comments, e.target.comment.value ]
+    }
+
+    try {
+      await blogService.update(updatedBlog).then(() => {
+        dispatch(updateBlog(updatedBlog))
+        dispatch(setNotification('success',`comment '${e.target.comment.value}' added successfully`))
+        e.target.comment.value = ''
+      })
+    } catch (error) {
+      dispatch(setNotification('error', `Cannot add comment ${e.target.comment.value}`))
+    }
+  }
+
   return (
     <div>
       <h1>{blog.title}</h1>
@@ -53,7 +71,16 @@ const BlogInfo = ({ blog }) => {
         added by {blog.user.name || blog.user.username} <button onClick={removeBlog}>remove</button>
       </span>
       <h2>comments</h2>
-      <br />
+      <form onSubmit={commentBlog}>
+        <input name='comment' />{' '}
+        <button>add comment</button>
+      </form>
+      {blog.comments.length < 1
+        ? <p><em>No comments here, be the first one to comment!</em></p>
+        : <ul>
+            {blog.comments.map((comment, id) => <li key={id}>{comment}</li>)}
+          </ul>
+      }
     </div>
   )
 }

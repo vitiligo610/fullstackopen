@@ -13,7 +13,7 @@ const BlogForm = ({ toggleForm }) => {
     const blogObject = {
       title: e.target.title.value,
       author: e.target.author.value,
-      url: e.target.url.value
+      url: e.target.url.value,
     }
     try {
       await blogService.create(blogObject).then((returnedBlog) => {
