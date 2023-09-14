@@ -1,4 +1,3 @@
-import { useField } from '../hooks'
 import { useDispatch } from 'react-redux'
 import { setNotification } from '../reducers/notificationReducer'
 import { login } from '../reducers/authReducer'
@@ -7,19 +6,11 @@ import Notification from './Notification'
 const LoginForm = () => {
   const dispatch = useDispatch()
 
-  const username = useField('text')
-  const password = useField('password')
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async e => {
     e.preventDefault()
     try {
-      dispatch(login(username.value, password.value))
-      dispatch(
-        setNotification(
-          'success',
-          `logged in successfully as ${username.value}`
-        )
-      )
+      await dispatch(login(e.target.username.value, e.target.password.value))
+      dispatch(setNotification('success', `logged in successfully as ${e.target.username.value}`))
     } catch (error) {
       dispatch(setNotification('error', 'Wrong credentials'))
     }
@@ -31,21 +22,19 @@ const LoginForm = () => {
       <Notification />
       <form onSubmit={handleSubmit}>
         <div>
-          username
+          username: {' '}
           <input
             name='username'
-            type={username.type}
-            value={username.value}
-            onChange={username.onChange}
+            type='text'
+            required
           />
         </div>
         <div>
-          password
+          password: {' '}
           <input
             name='password'
-            type={password.type}
-            value={password.value}
-            onChange={password.onChange}
+            type='password'
+            required
           />
         </div>
         <button>login</button>

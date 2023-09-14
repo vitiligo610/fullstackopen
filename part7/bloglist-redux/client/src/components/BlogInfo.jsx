@@ -52,6 +52,7 @@ const BlogInfo = ({ blog }) => {
       <span>
         added by {blog.user.name || blog.user.username} <button onClick={removeBlog}>remove</button>
       </span>
+      <h2>comments</h2>
       <br />
     </div>
   )

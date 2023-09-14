@@ -1,4 +1,3 @@
-import { useField } from '../hooks'
 import blogService from '../services/blogs'
 import { setNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
@@ -7,28 +6,14 @@ import { addBlog } from '../reducers/blogReducer'
 const BlogForm = ({ toggleForm }) => {
   const dispatch = useDispatch()
 
-  const title = useField('text')
-  const author = useField('text')
-  const url = useField('text')
-
   const user = useSelector((state) => state.user)
 
   const createBlog = async (e) => {
-    // e.preventDefault()
-    // createBlog({
-    //   title: title.value,
-    //   author: author.value,
-    //   url: url.value
-    // })
-    // title.reset()
-    // author.reset()
-    // url.reset()
-    // toggleForm()
     e.preventDefault()
     const blogObject = {
-      title: title.value,
-      author: author.value,
-      url: url.value
+      title: e.target.title.value,
+      author: e.target.author.value,
+      url: e.target.url.value
     }
     try {
       await blogService.create(blogObject).then((returnedBlog) => {
@@ -41,21 +26,14 @@ const BlogForm = ({ toggleForm }) => {
           }
         }
         dispatch(addBlog(blogToDispatch))
-        dispatch(
-          setNotification(
-            'success',
-            `a new blog '${blogObject.title}' by '${blogObject.author}' added`
-          )
-        )
+        dispatch(setNotification('success', `a new blog '${e.target.title.value}' by '${e.target.author.value}' added`))
       })
     } catch (error) {
-      dispatch(
-        setNotification('error', `cannot add blog '${blogObject.title}'`)
-      )
+      dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
     }
-    title.reset()
-    author.reset()
-    url.reset()
+    e.target.title.value = ''
+    e.target.author.value = ''
+    e.target.url.value = ''
     toggleForm()
   }
 
@@ -66,9 +44,7 @@ const BlogForm = ({ toggleForm }) => {
         title:{' '}
         <input
           name='title'
-          type={title.type}
-          value={title.value}
-          onChange={title.onChange}
+          type='text'
           required
         />
       </div>
@@ -76,9 +52,7 @@ const BlogForm = ({ toggleForm }) => {
         author:{' '}
         <input
           name='author'
-          type={author.type}
-          value={author.value}
-          onChange={author.onChange}
+          type='text'
           required
         />
       </div>
@@ -86,9 +60,7 @@ const BlogForm = ({ toggleForm }) => {
         url:{' '}
         <input
           name='url'
-          type={url.type}
-          value={url.value}
-          onChange={url.onChange}
+          type='text'
           required
         />
       </div>
