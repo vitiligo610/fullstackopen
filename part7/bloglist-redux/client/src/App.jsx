@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import './index.css'
 import LoginForm from './components/LoginForm'
 import Header from './components/Header'
+import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import BlogInfo from './components/BlogInfo'
 import UserList from './components/UserList'
@@ -43,12 +44,15 @@ const App = () => {
         user &&
         <>
         <Header />
-          <Routes>
-            <Route path='/blogs/:id' element={<BlogInfo blog={matchedBlog} />} />
-            <Route path='/users/:id' element={<UserInfo user={matchedUser} />} />
-            <Route path='/users' element={<UserList />} />
-            <Route path='/' element={<BlogList />} />
-          </Routes>
+        <h2>Blog App</h2>
+        <Notification />
+
+        <Routes>
+          <Route path='/blogs/:id' element={<BlogInfo blog={matchedBlog} />} />
+          <Route path='/users/:id' element={<UserInfo user={matchedUser} />} />
+          <Route path='/users' element={<UserList />} />
+          <Route path='/' element={<BlogList />} />
+        </Routes>
         </>
       }
     </div>
