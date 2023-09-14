@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
 import './index.css'
 import Togglable from './components/Togglable'
+import BlogList from './components/BlogList'
 import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
@@ -27,75 +28,58 @@ const App = () => {
   const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
-  const blogFormRef = useRef()
+  // const createBlog = async blogObject => {
+  //   blogFormRef.current.toggleVisibility()
+  //   try {
+  //     await blogService
+  //       .create(blogObject)
+  //       .then(returnedBlog => {
+  //         dispatch(addBlog(returnedBlog))
+  //         dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
+  //       })
+  //   } catch (error) {
+  //     dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
+  //   }
+  // }
 
-  const toggleForm = () => blogFormRef.current.toggleVisibility()
+  // const increaseLikes = async blogToUpdate => {
+  //   const updatedBlog = {
+  //     ...blogToUpdate,
+  //     likes: blogToUpdate.likes + 1
+  //   }
 
-  const createBlog = async blogObject => {
-    blogFormRef.current.toggleVisibility()
-    try {
-      await blogService
-        .create(blogObject)
-        .then(returnedBlog => {
-          dispatch(addBlog(returnedBlog))
-          dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
-        })
-    } catch (error) {
-      dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
-    }
-  }
-
-  const increaseLikes = async blogToUpdate => {
-    const updatedBlog = {
-      ...blogToUpdate,
-      likes: blogToUpdate.likes + 1
-    }
-
-    try {
-      await blogService
-        .update(updatedBlog)
-        .then(() => {
-          dispatch(updateBlog(updatedBlog))
-          dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`))
-        })
-    } catch (error) {
-      dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
-    }
-  }
+  //   try {
+  //     await blogService
+  //       .update(updatedBlog)
+  //       .then(() => {
+  //         dispatch(updateBlog(updatedBlog))
+  //         dispatch(setNotification('success', `Blog '${updatedBlog.title}' was successfully updated`))
+  //       })
+  //   } catch (error) {
+  //     dispatch(setNotification('error', `Cannot update blog ${blogToUpdate.title}`))
+  //   }
+  // }
 
   const byLikes = (b1, b2) => b2.likes - b1.likes
 
-  const removeBlog = async blogToDelete => {
-    if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
-      try {
-        await blogService
-          .remove(blogToDelete.id)
-          .then(() => {
-            dispatch(deleteBlog(blogToDelete.id))
-            dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully removed`))
-          })
-      } catch (error) {
-        dispatch(setNotification('error', `Cannot remove blog '${blogToDelete.title}'`))
-      }
-    }
-  }
-
-  const handleLogin = async e => {
-    e.preventDefault()
-    try {
-      dispatch(login(username, password))
-      dispatch(setNotification('success', `logged in successfully as ${username}`))
-    } catch (error) {
-      dispatch(setNotification('error', 'Wrong credentials'))
-    }
-  }
+  // const removeBlog = async blogToDelete => {
+  //   if (window.confirm(`Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`)) {
+  //     try {
+  //       await blogService
+  //         .remove(blogToDelete.id)
+  //         .then(() => {
+  //           dispatch(deleteBlog(blogToDelete.id))
+  //           dispatch(setNotification('success', `Blog '${blogToDelete.title}' was successfully removed`))
+  //         })
+  //     } catch (error) {
+  //       dispatch(setNotification('error', `Cannot remove blog '${blogToDelete.title}'`))
+  //     }
+  //   }
+  // }
 
   const handleLogout = () => {
     dispatch(logout())
   }
-
-
-  const sortedBlogs = [...blogs].sort(byLikes)
 
   return (
     <div>
@@ -104,13 +88,7 @@ const App = () => {
         <>
           <h2>Log in to application</h2>
           <Notification />
-          <LoginForm
-            username={username}
-            password={password}
-            handleUsernameChange={({ target }) => setUsername(target.value)}
-            handlePasswordChange={({ target }) => setPassword(target.value)}
-            handleSubmit={handleLogin}
-          />
+          <LoginForm />
         </>
       }
       {
@@ -120,12 +98,7 @@ const App = () => {
           <Notification />
           {user.name || user.username} logged in &nbsp;
           <button onClick={handleLogout}>log out</button>
-          <Togglable buttonLabel='new blog' ref={blogFormRef}>
-            <BlogForm toggleForm={toggleForm} createBlog={createBlog} />
-          </Togglable>
-          {sortedBlogs.map((blog, index) =>
-            <Blog key={index} blog={blog} updateBlog={increaseLikes} removeBlog={removeBlog} />
-          )}
+          <BlogList />
         </>
       }
     </div>

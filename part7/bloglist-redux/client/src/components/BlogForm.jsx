@@ -11,9 +11,9 @@ const BlogForm = ({ toggleForm }) => {
   const author = useField('text')
   const url = useField('text')
 
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
 
-  const createBlog = async e => {
+  const createBlog = async (e) => {
     // e.preventDefault()
     // createBlog({
     //   title: title.value,
@@ -31,15 +31,27 @@ const BlogForm = ({ toggleForm }) => {
       url: url.value
     }
     try {
-      await blogService
-        .create(blogObject)
-        .then(returnedBlog => {
-          dispatch(addBlog({ ...returnedBlog, user: { username: user.username, name: user.name, id: returnedBlog.user.id }}))
-          console.error('returnedBlog ', returnedBlog)
-          dispatch(setNotification('success', `a new blog '${blogObject.title}' by '${blogObject.author}' added`))
-        })
+      await blogService.create(blogObject).then((returnedBlog) => {
+        const blogToDispatch = {
+          ...returnedBlog,
+          user: {
+            name: user.name,
+            username: user.username,
+            id: returnedBlog.user.id
+          }
+        }
+        dispatch(addBlog(blogToDispatch))
+        dispatch(
+          setNotification(
+            'success',
+            `a new blog '${blogObject.title}' by '${blogObject.author}' added`
+          )
+        )
+      })
     } catch (error) {
-      dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
+      dispatch(
+        setNotification('error', `cannot add blog '${blogObject.title}'`)
+      )
     }
     title.reset()
     author.reset()
@@ -51,7 +63,8 @@ const BlogForm = ({ toggleForm }) => {
     <form onSubmit={createBlog}>
       <h2>create new</h2>
       <div>
-        title: <input
+        title:{' '}
+        <input
           name='title'
           type={title.type}
           value={title.value}
@@ -60,7 +73,8 @@ const BlogForm = ({ toggleForm }) => {
         />
       </div>
       <div>
-        author: <input
+        author:{' '}
+        <input
           name='author'
           type={author.type}
           value={author.value}
@@ -69,7 +83,8 @@ const BlogForm = ({ toggleForm }) => {
         />
       </div>
       <div>
-        url: <input
+        url:{' '}
+        <input
           name='url'
           type={url.type}
           value={url.value}
