@@ -1,6 +1,5 @@
 import { useSelector } from 'react-redux'
 import { useRef } from 'react'
-import Blog from './Blog'
 import Togglable from './Togglable'
 import BlogForm from './BlogForm'
 import { Link } from 'react-router-dom'
@@ -28,7 +27,7 @@ const BlogList = () => {
       </Togglable>
       {blogsCopy.map((blog) => (
         <div key={blog.id} style={blogStyle}>
-          <Link to={`/blogs/${blog.id}`}><Blog blog={blog} /></Link>
+          <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
         </div>
       ))}
     </div>

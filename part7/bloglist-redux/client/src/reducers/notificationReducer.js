@@ -9,14 +9,14 @@ const notificationReducer = (state = null, action) => {
   }
 }
 
-export const setNotification = (type, message) => {
+export const setNotification = (status, message) => {
   return async dispatch => {
-    if (type === 'success')
+    if (status === 'success')
       dispatch({
         type: 'SHOW_NOTIFICATION',
         payload: `SUCCESS ${message}`
       })
-    else if (type === 'error') 
+    else if (status === 'error') 
       dispatch({
         type: 'SHOW_NOTIFICATION',
         payload: `ERROR ${message}`

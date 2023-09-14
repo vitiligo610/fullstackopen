@@ -3,10 +3,10 @@ import { useSelector } from 'react-redux'
 const Notification = () => {
   const notification = useSelector(state => state.notification)
 
-  let content, className
+  let content, status
   if (notification) {
     content = notification.includes('SUCCESS') ? notification.substring(7) : notification.substring(5)
-    className = notification.includes('SUCCESS') ? 'success' : 'error'
+    status = notification.includes('SUCCESS') ? 'success' : 'error'
   }
 
   if (!notification) {
@@ -14,7 +14,7 @@ const Notification = () => {
   }
 
   return (
-    <div className={className}>
+    <div className={status}>
       {content}
     </div>
   )

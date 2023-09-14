@@ -35,7 +35,7 @@ const BlogInfo = ({ blog }) => {
           .then(() => {
             dispatch(deleteBlog(blog.id))
             dispatch(setNotification('success', `Blog '${blog.title}' was successfully removed`))
-            navigate('/')
+            navigate('/blogs')
           })
       } catch (error) {
         dispatch(setNotification('error', `Cannot remove blog '${blog.title}'`))

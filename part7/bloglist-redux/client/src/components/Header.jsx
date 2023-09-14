@@ -19,10 +19,11 @@ const Header = () => {
 
   return (
     <header style={headerStyle}>
-      <Link to='/' style={padding}>blogs</Link>
+      <Link to='/' style={padding}>home</Link>
+      <Link to='/blogs' style={padding}>blogs</Link>
       <Link to='/users' style={padding}>users</Link>
-      <em style={padding}>{user.name || user.username} logged in &nbsp;</em>
-      <button onClick={handleLogout}>log out</button>
+      <em>{user.name || user.username} logged in{' '}</em>
+      <button onClick={handleLogout} className='btn btn-primary'>log out</button>
     </header>
   )
 }

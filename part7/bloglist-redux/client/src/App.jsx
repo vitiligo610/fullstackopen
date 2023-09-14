@@ -1,14 +1,16 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { Routes, Route, useMatch } from 'react-router-dom'
+
 import './index.css'
 import LoginForm from './components/LoginForm'
 import Header from './components/Header'
+import Home from './components/Home'
 import Notification from './components/Notification'
 import BlogList from './components/BlogList'
 import BlogInfo from './components/BlogInfo'
 import UserList from './components/UserList'
 import UserInfo from './components/UserInfo'
-import { Routes, Route, useMatch } from 'react-router-dom'
 
 import { initializeUser } from './reducers/authReducer'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -38,7 +40,7 @@ const App = () => {
     : null
   
   return (
-    <div>
+    <div className='container'>
       {!user && <LoginForm />}
       {
         user &&
@@ -49,9 +51,10 @@ const App = () => {
 
         <Routes>
           <Route path='/blogs/:id' element={<BlogInfo blog={matchedBlog} />} />
+          <Route path='/blogs' element={<BlogList />} />
           <Route path='/users/:id' element={<UserInfo user={matchedUser} />} />
           <Route path='/users' element={<UserList />} />
-          <Route path='/' element={<BlogList />} />
+          <Route path='/' element={<Home />} />
         </Routes>
         </>
       }
