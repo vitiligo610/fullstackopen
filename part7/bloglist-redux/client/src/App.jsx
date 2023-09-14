@@ -2,11 +2,11 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import './index.css'
 import LoginForm from './components/LoginForm'
-import Notification from './components/Notification'
 import Header from './components/Header'
 import BlogList from './components/BlogList'
 import UserList from './components/UserList'
-import { Routes, Route } from 'react-router-dom'
+import UserInfo from './components/UserInfo'
+import { Routes, Route, useMatch } from 'react-router-dom'
 
 import { initializeUser } from './reducers/authReducer'
 import { initializeBlogs } from './reducers/blogReducer'
@@ -22,6 +22,12 @@ const App = () => {
   }, [])
 
   const user = useSelector(state => state.user)
+  const users = useSelector(state => state.users)
+
+  const userMatch = useMatch('/users/:id')
+  const matchedUser = userMatch
+    ? users.find(user => user.id === String(userMatch.params.id))
+    : null
 
   return (
     <div>
@@ -31,6 +37,7 @@ const App = () => {
         <>
         <Header />
           <Routes>
+            <Route path='/users/:id' element={<UserInfo user={matchedUser} />} />
             <Route path='/users' element={<UserList />} />
             <Route path='/' element={<BlogList />} />
           </Routes>
