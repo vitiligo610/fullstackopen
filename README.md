@@ -18,7 +18,7 @@ Learn React, Redux, Node.js, MongoDB, GraphQL and TypeScript in one go! This cou
 
 ### [Part 6 - State management with Redux](./part6)
 
-<!-- ### [Part 7 - React router, custom hooks, styling app with CSS and webpack](./part7) -->
+### [Part 7 - React router, custom hooks, styling app with CSS and webpack](./part7)
 
 <!-- ### [Part 8 - GraphQL](./part8) -->
 
