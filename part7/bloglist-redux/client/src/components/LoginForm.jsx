@@ -19,7 +19,7 @@ const LoginForm = () => {
       dispatch(
         setNotification(
           'success',
-          `logged in successfully as ${e.target.username.value}`
+          `Logged in successfully as '${e.target.username.value}'`
         )
       )
     } catch (error) {

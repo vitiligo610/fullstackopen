@@ -68,6 +68,7 @@ const BlogInfo = ({ blog }) => {
       <span>
         {blog.likes} likes <StyledButtonSmall onClick={increaseLikes}>like</StyledButtonSmall>
       </span><br />
+      <span><a href={blog.url}>{blog.url}</a></span><br />
       <span>
         added by {blog.user.name || blog.user.username} <StyledButtonSmall onClick={removeBlog}>remove</StyledButtonSmall>
       </span>
