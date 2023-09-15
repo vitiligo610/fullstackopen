@@ -14,8 +14,6 @@ const Blog = ({ blog, updateBlog, removeBlog }) => {
     setBlogObject({ ...blog, likes: blog.likes + 1 })
   }
 
-  console.error('username', blog.user.name)
-
   const blogStyle = {
     paddingTop: 5,
     paddingBottom: 5,
