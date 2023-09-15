@@ -63,14 +63,14 @@ blogsRouter.put('/:id', async (request, response) => {
   const id = request.params.id
 
   const blog = {
-    title: title,
-    author: author,
-    url: url,
-    likes: likes
+    title,
+    author,
+    url,
+    likes
   }
 
-  const updatedNote = await Blog.findByIdAndUpdate(id, blog, { new: true })
-  response.status(200).json(updatedNote)
+  await Blog.findByIdAndUpdate(id, blog, { new: true })
+  response.status(200).json(blog)
 })
 
 blogsRouter.delete('/:id', async (request, response) => {
