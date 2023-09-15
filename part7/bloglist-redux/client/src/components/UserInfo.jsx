@@ -1,5 +1,6 @@
-import { Link } from 'react-router-dom'
 import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
+import { StyledList } from './styledComponents'
 
 const UserInfo = ({ user }) => {
   const blogs = useSelector(state => state.blogs)
@@ -12,14 +13,14 @@ const UserInfo = ({ user }) => {
   return (
     <div>
       <h1>{user.name}</h1>
-      <h2>added blogs</h2>
-      <ul>
+      <h3>Added blogs</h3>
+      <StyledList>
         {userBlogs.map((blog) => (
           <li key={blog.id}>
             <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
           </li>
         ))}
-      </ul>
+      </StyledList>
     </div>
   )
 }

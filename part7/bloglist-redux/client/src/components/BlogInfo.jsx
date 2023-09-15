@@ -3,6 +3,7 @@ import { setNotification } from '../reducers/notificationReducer'
 import { updateBlog, deleteBlog } from '../reducers/blogReducer'
 import blogService from '../services/blogs'
 import { useNavigate } from 'react-router-dom'
+import { StyledInput, StyledButtonSmall } from './styledComponents'
 
 const BlogInfo = ({ blog }) => {
   const dispatch = useDispatch()
@@ -65,15 +66,15 @@ const BlogInfo = ({ blog }) => {
     <div>
       <h1>{blog.title}</h1>
       <span>
-        {blog.likes} likes <button onClick={increaseLikes}>like</button>
+        {blog.likes} likes <StyledButtonSmall onClick={increaseLikes}>like</StyledButtonSmall>
       </span><br />
       <span>
-        added by {blog.user.name || blog.user.username} <button onClick={removeBlog}>remove</button>
+        added by {blog.user.name || blog.user.username} <StyledButtonSmall onClick={removeBlog}>remove</StyledButtonSmall>
       </span>
-      <h2>comments</h2>
+      <h2>Comments</h2>
       <form onSubmit={commentBlog}>
-        <input name='comment' />{' '}
-        <button>add comment</button>
+        <StyledInput name='comment' />
+        <StyledButtonSmall>add comment</StyledButtonSmall>
       </form>
       {blog.comments.length < 1
         ? <p><em>No comments here, be the first one to comment!</em></p>

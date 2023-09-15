@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { Routes, Route, useMatch } from 'react-router-dom'
+import { StyledDiv, StyledHeading } from './components/styledComponents'
 
 import './index.css'
 import LoginForm from './components/LoginForm'
@@ -15,6 +16,8 @@ import UserInfo from './components/UserInfo'
 import { initializeUser } from './reducers/authReducer'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUsers } from './reducers/userReducer'
+
+
 
 const App = () => {
   const dispatch = useDispatch()
@@ -40,22 +43,25 @@ const App = () => {
     : null
   
   return (
-    <div className='container'>
+    <div>
       {!user && <LoginForm />}
       {
         user &&
         <>
         <Header />
-        <h2>Blog App</h2>
-        <Notification />
+        <StyledDiv>
+          <StyledHeading>Blog App</StyledHeading>
+          <Notification />
 
-        <Routes>
-          <Route path='/blogs/:id' element={<BlogInfo blog={matchedBlog} />} />
-          <Route path='/blogs' element={<BlogList />} />
-          <Route path='/users/:id' element={<UserInfo user={matchedUser} />} />
-          <Route path='/users' element={<UserList />} />
-          <Route path='/' element={<Home />} />
-        </Routes>
+          <Routes>
+            <Route path='/blogs/:id' element={<BlogInfo blog={matchedBlog} />} />
+            <Route path='/blogs' element={<BlogList />} />
+            <Route path='/users/:id' element={<UserInfo user={matchedUser} />} />
+            <Route path='/users' element={<UserList />} />
+            <Route path='/' element={<Home />} />
+          </Routes>
+
+        </StyledDiv>
         </>
       }
     </div>

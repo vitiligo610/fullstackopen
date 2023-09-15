@@ -2,6 +2,12 @@ import blogService from '../services/blogs'
 import { setNotification } from '../reducers/notificationReducer'
 import { useSelector, useDispatch } from 'react-redux'
 import { addBlog } from '../reducers/blogReducer'
+import {
+  StyledButton,
+  StyledFormHeading,
+  StyledSpan,
+  StyledInput
+} from './styledComponents'
 
 const BlogForm = ({ toggleForm }) => {
   const dispatch = useDispatch()
@@ -13,7 +19,7 @@ const BlogForm = ({ toggleForm }) => {
     const blogObject = {
       title: e.target.title.value,
       author: e.target.author.value,
-      url: e.target.url.value,
+      url: e.target.url.value
     }
     try {
       await blogService.create(blogObject).then((returnedBlog) => {
@@ -26,10 +32,17 @@ const BlogForm = ({ toggleForm }) => {
           }
         }
         dispatch(addBlog(blogToDispatch))
-        dispatch(setNotification('success', `a new blog '${e.target.title.value}' by '${e.target.author.value}' added`))
+        dispatch(
+          setNotification(
+            'success',
+            `a new blog '${e.target.title.value}' by '${e.target.author.value}' added`
+          )
+        )
       })
     } catch (error) {
-      dispatch(setNotification('error', `cannot add blog '${blogObject.title}'`))
+      dispatch(
+        setNotification('error', `cannot add blog '${blogObject.title}'`)
+      )
     }
     e.target.title.value = ''
     e.target.author.value = ''
@@ -38,33 +51,41 @@ const BlogForm = ({ toggleForm }) => {
   }
 
   return (
-    <form onSubmit={createBlog}>
-      <h2>create new</h2>
+    <form onSubmit={createBlog} col-width='50px'>
       <div>
-        title:{' '}
-        <input
-          name='title'
-          type='text'
-          required
-        />
+            <StyledFormHeading>create new</StyledFormHeading>
+        <table>
+          <tbody>
+            <tr>
+              <td style={{width:'60px'}}>
+                <StyledSpan>Title</StyledSpan>
+              </td>
+              <td>
+                <StyledInput name='title' type='text' required />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <StyledSpan>Author</StyledSpan>
+              </td>
+              <td>
+                <StyledInput name='author' type='text' required />
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <StyledSpan>URL</StyledSpan>
+              </td>
+              <td>
+                <StyledInput name='url' type='text' required />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div>
-        author:{' '}
-        <input
-          name='author'
-          type='text'
-          required
-        />
-      </div>
-      <div>
-        url:{' '}
-        <input
-          name='url'
-          type='text'
-          required
-        />
-      </div>
-      <button>create</button>
+      <div></div>
+      <div></div>
+      <StyledButton>create</StyledButton>
     </form>
   )
 }
