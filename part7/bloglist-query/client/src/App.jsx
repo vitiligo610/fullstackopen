@@ -9,8 +9,8 @@ import LoginForm from './components/LoginForm'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification, useDispatchValue } from './NotificationContext'
-import { useQuery, useMutation, QueryClient } from '@tanstack/react-query'
-import { getAll, create } from './requests'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getAll, create, update, remove } from './requests'
 
 const App = () => {
   // const [blogs, setBlogs] = useState([])
@@ -19,7 +19,7 @@ const App = () => {
   const [user, setUser] = useState(null)
 
   const dispatch = useDispatchValue()
-  const queryClient = new QueryClient()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -31,17 +31,34 @@ const App = () => {
   }, [])
 
   const newBlogMutation = useMutation(create, {
-    onSuccess: () => {
-      queryClient.invalidateQueries('blogs')
+    onSuccess: (returnedBlog) => {
+      queryClient.invalidateQueries(['blogs'])
+      dispatch({
+        type: 'SHOW_NOTIFICATION',
+        payload: `SUCCESS a new blog '${returnedBlog.title}' by '${returnedBlog.author}' added`
+      })
+      setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
     }
   })
 
-  const result = useQuery({
-    queryKey: ['blogs'],
-    queryFn: getAll
+  const updateBlogMutation = useMutation(update, {
+    onSuccess: (returnedBlog) => {
+      queryClient.invalidateQueries(['blogs'])
+      dispatch({
+        type: 'SHOW_NOTIFICATION',
+        payload: `SUCCESS blog '${returnedBlog.title}' was successfully updated`
+      })
+      setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
+    }
   })
 
-  if (result.isLoading) return <div>loading data...</div>
+  const removeBlogMutation = useMutation(remove, {
+    onSuccess: () => {
+      console.log(returnedBlog)
+    }
+  })
+
+  const result = useQuery(['blogs'], getAll)
 
   const blogs = result.data
 
@@ -49,39 +66,24 @@ const App = () => {
 
   const createBlog = (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    blogService
-      .create(blogObject)
-      .then((returnedBlog) => {
-        newBlogMutation.mutate(returnedBlog)
-        dispatch({
-          type: 'SHOW_NOTIFICATION',
-          payload: `SUCCESS a new blog ${returnedBlog.title} by ${returnedBlog.author} added`
-        })
-        setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
+    try {
+      newBlogMutation.mutate(blogObject)
+    } catch (error) {
+      dispatch({
+        type: 'SHOW_NOTIFICATION',
+        payload: `cannot add blog ${blogObject.title}`
       })
-      .catch((error) => {
-        dispatch({
-          type: 'SHOW_NOTIFICATION',
-          payload: `cannot add blog ${blogObject.title}`
-        })
-        setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }, 3000))
-      })
+      setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }, 3000))
+    }
   }
 
-  const updateBlog = async (blogToUpdate) => {
+  const updateBlog = (blogToUpdate) => {
     try {
       const updatedBlog = {
         ...blogToUpdate,
         likes: blogToUpdate.likes + 1
       }
-      await blogService.update(updatedBlog).then((returnedBlog) => {
-        // setBlogs(blogs.map(blog => blog.id !== returnedBlog.id ? blog : returnedBlog))
-        dispatch({
-          type: 'SHOW_NOTIFICATION',
-          payload: `SUCCESS blog ${returnedBlog.title} was successfully updated`
-        })
-        setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
-      })
+      updateBlogMutation.mutate(updatedBlog)
     } catch (error) {
       dispatch({
         type: 'SHOW_NOTIFICATION',
@@ -96,22 +98,26 @@ const App = () => {
   const removeBlog = async (blogToDelete) => {
     if (
       window.confirm(
-        `Remove blog ${blogToDelete.title} by ${blogToDelete.author}`
+        `Remove blog '${blogToDelete.title}' by '${blogToDelete.author}'`
       )
     ) {
       try {
-        await blogService.remove(blogToDelete).then(() => {
-          // setBlogs(blogs.filter(n => n.id !== blogToDelete.id))
-          dispatch({
-            type: 'SHOW_NOTIFICATION',
-            payload: `SUCCESS Blog ${blogToDelete.title} was successfully deleted`
-          })
-          setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
+        await remove(blogToDelete)
+        const blogs = queryClient.getQueryData(['blogs'])
+        queryClient.setQueryData(
+          ['blogs'],
+          blogs.filter((blog) => blog.id !== blogToDelete.id)
+        )
+        queryClient.invalidateQueries(['blogs'])
+        dispatch({
+          type: 'SHOW_NOTIFICATION',
+          payload: `SUCCESS blog '${blogToDelete.title}' was successfully deleted`
         })
+        setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
       } catch (error) {
         dispatch({
           type: 'SHOW_NOTIFICATION',
-          payload: `cannot remove blog ${blogToDelete.title}`
+          payload: `cannot remove blog '${blogToDelete.title}'`
         })
         setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }, 3000))
       }
@@ -181,14 +187,22 @@ const App = () => {
           <Togglable buttonLabel='new blog' ref={blogFormRef}>
             <BlogForm createBlog={createBlog} />
           </Togglable>
-          {blogs.sort(byLikes).map((blog, index) => (
-            <Blog
-              key={index}
-              blog={blog}
-              updateBlog={updateBlog}
-              removeBlog={removeBlog}
-            />
-          ))}
+          {result.isLoading ? (
+            <h2>
+              <em>loading data....</em>
+            </h2>
+          ) : (
+            blogs
+              .sort(byLikes)
+              .map((blog, index) => (
+                <Blog
+                  key={index}
+                  blog={blog}
+                  updateBlog={updateBlog}
+                  removeBlog={removeBlog}
+                />
+              ))
+          )}
         </>
       )}
     </div>

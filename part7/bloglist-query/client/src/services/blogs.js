@@ -2,7 +2,7 @@ import axios from 'axios'
 const baseUrl = '/api/blogs'
 
 let token = null
-let config
+export let config
 
 const setToken = newToken => {
   token = `Bearer ${newToken}`
@@ -38,5 +38,4 @@ export default {
   create,
   update,
   remove,
-  config
 }
