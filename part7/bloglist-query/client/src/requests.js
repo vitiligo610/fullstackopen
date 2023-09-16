@@ -1,7 +1,16 @@
 import axios from 'axios'
-import { config } from './services/blogs'
 
 const baseUrl = '/api/blogs'
+
+let token = null
+let config
+
+export const setToken = newToken => {
+  token = `Bearer ${newToken}`
+  conig = {
+    headers: { authorization: token }
+  }
+}
 
 export const getAll = () =>
   axios.get(baseUrl).then(res => res.data)

@@ -6,11 +6,10 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import blogService from './services/blogs'
 import loginService from './services/login'
 import { setNotification, useDispatchValue } from './NotificationContext'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getAll, create, update, remove } from './requests'
+import { setToken, getAll, create, update, remove } from './requests'
 
 const App = () => {
   // const [blogs, setBlogs] = useState([])
@@ -26,7 +25,7 @@ const App = () => {
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
-      blogService.setToken(user.token)
+      setToken(user.token)
     }
   }, [])
 
@@ -49,12 +48,6 @@ const App = () => {
         payload: `SUCCESS blog '${returnedBlog.title}' was successfully updated`
       })
       setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
-    }
-  })
-
-  const removeBlogMutation = useMutation(remove, {
-    onSuccess: () => {
-      console.log(returnedBlog)
     }
   })
 
@@ -134,7 +127,7 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
-      blogService.setToken(user.token)
+      setToken(user.token)
       setUser(user)
       dispatch({
         type: 'SHOW_NOTIFICATION',
