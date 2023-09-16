@@ -7,7 +7,7 @@ let config
 
 export const setToken = newToken => {
   token = `Bearer ${newToken}`
-  conig = {
+  config = {
     headers: { authorization: token }
   }
 }
@@ -23,3 +23,6 @@ export const update = blogObject =>
 
 export const remove = blogObject =>
   axios.delete(`${baseUrl}/${blogObject.id}`, config).then(res => res.data)
+
+export const login = ({ username, password }) =>
+  axios.post('/api/login', { username, password }).then(res => res.data)

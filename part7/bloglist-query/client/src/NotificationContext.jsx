@@ -23,15 +23,6 @@ export const useDispatchValue = () => {
   return stateAndDispatch[1]
 }
 
-export const setNotification = (dispatch, status, notification) => {
-  if (status === 'success')
-    dispatch(useDispatchValue({ type: 'NEW_NOTIFICATION', payload: `SUCCESS ${notification}`}))
-  else if (status === 'error')
-    dispatch(useDispatchValue({ type: 'NEW_NOTIFICATION', payload: `ERROR ${notification}`}))
-
-  setTimeout(() => dispatch(useDispatchValue({ type: 'HIDE_NOTIFICATION' })), 3000)
-}
-
 export const NotificationContextProvider = (props) => {
   const [state, dispatch] = useReducer(notificationReducer, null)
 

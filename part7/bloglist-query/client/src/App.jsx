@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useContext } from 'react'
 import PropTypes from 'prop-types'
 import './index.css'
 import Togglable from './components/Togglable'
@@ -6,16 +6,16 @@ import Blog from './components/Blog'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import loginService from './services/login'
-import { setNotification, useDispatchValue } from './NotificationContext'
+import { useDispatchValue } from './NotificationContext'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { setToken, getAll, create, update, remove } from './requests'
+import { UserContext } from './UserContext'
+import { setToken, login, getAll, create, update, remove } from './requests'
 
 const App = () => {
-  // const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+  // const [user, setUser] = useState(null)
+  const [user, userDispatch] = useContext(UserContext)
 
   const dispatch = useDispatchValue()
   const queryClient = useQueryClient()
@@ -24,8 +24,8 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
       setToken(user.token)
+      userDispatch({ type: 'INIT_USER', payload: user })
     }
   }, [])
 
@@ -121,14 +121,14 @@ const App = () => {
     e.preventDefault()
     console.log('logging in with', username, password)
     try {
-      const user = await loginService.login({
+      const user = await login({
         username,
         password
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
 
       setToken(user.token)
-      setUser(user)
+      userDispatch({ type: 'LOGIN', payload: user })
       dispatch({
         type: 'SHOW_NOTIFICATION',
         payload: `SUCCESS logged in successfully as ${
@@ -136,10 +136,6 @@ const App = () => {
         }`
       })
       setTimeout(() => dispatch({ type: 'HIDE_NOTIFICATION' }), 3000)
-      setNotification(
-        'success',
-        `Logged in successfully as ${user.name || user.username}`
-      )
       setUsername('')
       setPassword('')
     } catch (error) {
@@ -152,8 +148,7 @@ const App = () => {
   }
 
   const handleLogout = () => {
-    window.localStorage.clear('loggedBlogAppUser')
-    setUser(null)
+    userDispatch({ type: 'LOGOUT' })
   }
 
   return (
