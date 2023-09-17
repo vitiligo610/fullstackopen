@@ -115,7 +115,10 @@ const typeDefs = `
   type Query {
     bookCount: Int!
     authorCount: Int!
-    allBooks(author: String, genre: String): [Book!]
+    allBooks(
+      author: String
+      genre: String
+    ): [Book!]
     allAuthors: [Author!]
   }
 
@@ -128,7 +131,7 @@ const typeDefs = `
     ): Book
     editAuthor(
       name: String!
-      born: Int
+      setBornTo: Int
     ): Author
   }
 `
@@ -182,7 +185,7 @@ const resolvers = {
       const author = authors.find(a => a.name === name)
       const updatedAuthor = {
         ...author,
-        born: args.born
+        born: args.setBornTo
       }
       authors = authors.map(a => a.name !== name ? a : updatedAuthor)
       return updatedAuthor
