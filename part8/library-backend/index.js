@@ -102,14 +102,16 @@ const typeDefs = `
   type Book {
     title: String!
     author: String!
-    published: String!
+    published: Int!
     genres: [String!]
+    id: ID!
   }
 
   type Author {
     name: String!
     born: Int
-    bookCount: Int!
+    bookCount: Int
+    id: ID!
   }
 
   type Query {
@@ -161,7 +163,8 @@ const resolvers = {
         return {
           name: author.name,
           born: author.born,
-          bookCount: booksByAuthor.length
+          bookCount: booksByAuthor.length,
+          id: uuid()
         }
       })
     }
@@ -171,7 +174,8 @@ const resolvers = {
       const book = { ...args, id: uuid() }
       books = books.concat(book)
       const bookAuthor = book.author
-      const isAuthorAdded = authors.includes(bookAuthor)
+      const authorsNames = authors.map(a => a.name)
+      const isAuthorAdded = authorsNames.includes(bookAuthor)
       if (!isAuthorAdded) {
         authors = authors.concat({ name: bookAuthor, id: uuid() })
       }
