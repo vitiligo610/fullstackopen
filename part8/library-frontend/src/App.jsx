@@ -8,6 +8,7 @@ import LoginForm from './components/LoginForm'
 import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
+import Recommend from './components/Recommend'
 
 const App = () => {
   const [notification, setNotification] = useState(null)
@@ -41,6 +42,7 @@ const App = () => {
         <Link to='/authors'>authors</Link>
         <Link to='/books'>books</Link>
         {token && <Link to='/new'>add book</Link>}
+        {token && <Link to='/recommend'>recommend</Link>}
         {token && <button onClick={logout}>logout</button>}
         {!token && <Link to='/login'>login</Link>}
       </nav>
@@ -48,10 +50,11 @@ const App = () => {
       <Notification message={notification} />
 
       <Routes>
+        <Route path='/recommend' element={<Recommend />} />
         <Route path='/authors' element={<Authors />} />
         <Route path='/books' element={<Books />} />
+        <Route path='/login' element={<LoginForm setToken={setToken} setNotification={notify} />} />
         <Route path='/new' element={<NewBook setNotification={notify} />} />
-        <Route path='login' element={<LoginForm setToken={setToken} setNotification={notify} />} />
         <Route path='/' element={<Home />} />
       </Routes>
     </div>

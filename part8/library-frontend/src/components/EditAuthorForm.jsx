@@ -10,10 +10,10 @@ const EditAuthorForm = () => {
   const [born, setBorn] = useState('')
 
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    update: (cache, { data: { editAuthor }}) => {
+    update: (cache, response) => {
       cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors } )=> {
         return {
-          allAuthors: allAuthors.map(a => a.id !== editAuthor.id ? a : editAuthor)
+          allAuthors: allAuthors.map(a => a.id !== response.data.editAuthor.id ? a : response.data.editAuthor)
         }
       })
     }
