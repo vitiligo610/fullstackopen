@@ -50,7 +50,7 @@ const App = () => {
       <Routes>
         <Route path='/authors' element={<Authors />} />
         <Route path='/books' element={<Books />} />
-        <Route path='/new' element={<NewBook />} />
+        <Route path='/new' element={<NewBook setNotification={notify} />} />
         <Route path='login' element={<LoginForm setToken={setToken} setNotification={notify} />} />
         <Route path='/' element={<Home />} />
       </Routes>

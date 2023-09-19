@@ -10,7 +10,13 @@ const EditAuthorForm = () => {
   const [born, setBorn] = useState('')
 
   const [editAuthor] = useMutation(EDIT_AUTHOR, {
-    refetchQueries: [{ query: ALL_AUTHORS }]
+    update: (cache, { data: { editAuthor }}) => {
+      cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors } )=> {
+        return {
+          allAuthors: allAuthors.map(a => a.id !== editAuthor.id ? a : editAuthor)
+        }
+      })
+    }
   })
 
   const result = useQuery(ALL_AUTHORS)
