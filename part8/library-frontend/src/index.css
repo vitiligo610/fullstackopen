@@ -1,0 +1,42 @@
+nav table, nav tr, nav td {
+  border-collapse: collapse;
+}
+
+nav a {
+  border: 1px solid #cfd0d1;
+  text-decoration: none;
+  color: black;
+  padding: 3px 5px;
+}
+
+nav a:active, nav button:active {
+  box-shadow: rgba(0, 98, 204, 0.35) 0px 0px 0px 0.2rem;;
+}
+
+nav button {
+  margin: 0;
+  background-color: transparent;
+  padding: 3px 5px;
+  border: 1px solid #cfd0d1;
+  height: 25px;
+}
+
+.error {
+  color: red;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+.success {
+  color: green;
+  background: lightgrey;
+  font-size: 20px;
+  border-style: solid;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 10px 0;
+}
