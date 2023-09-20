@@ -5,7 +5,7 @@ import EditAuthorForm from './EditAuthorForm'
 import { ALL_AUTHORS } from '../queries'
 
 
-const Authors = () => {
+const Authors = ({ token }) => {
   const result = useQuery(ALL_AUTHORS)
 
   console.log('result', result)
@@ -35,7 +35,7 @@ const Authors = () => {
           </tbody>
         </table>
       )}
-      <EditAuthorForm />
+      {token && <EditAuthorForm />}
     </div>
   )
 }
