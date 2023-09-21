@@ -1,36 +1,23 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useQuery } from '@apollo/client'
 import Select from 'react-select'
 
 import { ALL_BOOKS } from '../queries'
+import { ALL_GENRES } from '../queries'
 
 const Books = () => {
   const [filter, setFilter] = useState('')
 
-  const result = useQuery(ALL_BOOKS, {
-    variables: { genre: filter !== null ? filter.value : '' }
-  })
+  const queryVariables = filter ? { variables: { genre: filter.value }} : {}
+
+  const result = useQuery(ALL_BOOKS, queryVariables)
+
+  const genresResult = useQuery(ALL_GENRES)
   console.log(result)
 
-  const getGenres = (arr) => {
-    for (let i = 0; i < arr.length; i++)
-      for (let j = 0; j < arr.length; j++)
-        if (arr[i] === arr[j]) if (i !== j) arr.splice(i, 1)
-
-    return arr
-  }
-
-  const options = []
-  if (!result.loading) {
-    const allBooks = result.data.allBooks
-    const genresWithDuplicates = allBooks.map((b) => b.genres.map((g) => g))
-    const genresInASingleArr = [].concat(...genresWithDuplicates)
-    const genres = [...getGenres(genresInASingleArr)]
-    genres.map((g) => {
-      const option = { label: g, value: g }
-      options.push(option)
-    })
-  }
+  let options = []
+  if (!genresResult.loading)
+    options = genresResult.data.allGenres.map((g) => ({ label: g, value: g }))
 
   const customStyles = {
     control: (baseStyles, state) => ({
@@ -44,12 +31,6 @@ const Books = () => {
       width: '300px',
       border: '1px solid #f3f3f3'
     })
-  }
-
-  const byGenre = (book) => {
-    if (!filter || !filter.value) return book
-    if (filter.value !== null)
-      if (book.genres.includes(filter.value)) return book
   }
 
   return (

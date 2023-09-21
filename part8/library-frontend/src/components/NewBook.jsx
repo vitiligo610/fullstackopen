@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 
-import { ALL_BOOKS, ALL_AUTHORS, ADD_BOOK } from '../queries'
+import { ALL_BOOKS, ALL_AUTHORS, ADD_BOOK, ALL_GENRES } from '../queries'
 
 const NewBook = ({ setNotification }) => {
   const [title, setTitle] = useState('')
@@ -15,19 +15,47 @@ const NewBook = ({ setNotification }) => {
       const msg = error.graphQLErrors[0].message
       setNotification(`ERROR ${msg}`)
     },
+    // refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_GENRES }],
     update: (cache, response) => {
       cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
         return {
           allBooks: allBooks.concat(response.data.addBook)
         }
       })
+      
+      const cachedAuthors = cache.readQuery({ query: ALL_AUTHORS })
+      if (cachedAuthors) {
+        cache.updateQuery({ query: ALL_AUTHORS }, ({ allAuthors }) => {
+          return {
+            allAuthors: [...new Set(allAuthors.concat(response.data.addBook.author))]
+          }
+        })
+      }
+
+      genres.forEach(genre => {
+        const cachedQuery = cache.readQuery({ query: ALL_BOOKS, variables: { genre }})
+        if (cachedQuery) {
+          cache.updateQuery({ query: ALL_BOOKS, variables: { genre }}, ({ allBooks }) => {
+            return {
+              allBooks: allBooks.concat(response.data.addBook)
+            }
+          })
+        }
+      })
+
+      cache.updateQuery({ query: ALL_GENRES }, ({ allGenres }) => {
+        return {
+          allGenres: [...new Set(allGenres.concat(response.data.addBook.genres.flat()))]
+        }
+      })
     }
+
   })
 
   const submit = async (event) => {
     event.preventDefault()
 
-    addBook({ variables: { title, author, published, genres }})
+    addBook({ variables: { title, author, published, genres: genres.filter(g => g !== '') }})
 
     setTitle('')
     setPublished('')

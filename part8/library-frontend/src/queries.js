@@ -15,7 +15,7 @@ export const LOGIN = gql`
 `
 
 export const CURRENT_USER = gql`
-  query {
+  query me {
     me {
       username
       favoriteGenre
@@ -87,5 +87,11 @@ export const EDIT_AUTHOR = gql`
       bookCount
       id
     }
+  }
+`
+
+export const ALL_GENRES = gql`
+  query allGenres {
+    allGenres
   }
 `

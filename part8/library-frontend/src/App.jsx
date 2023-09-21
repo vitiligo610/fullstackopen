@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import { useApolloClient } from '@apollo/client'
+import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev'
 
 import Home from './components/Home'
 import Notification from './components/Notification'
@@ -33,6 +34,12 @@ const App = () => {
   const notify = message => {
     setNotification(message)
     setTimeout(() => setNotification(null), 2000)
+  }
+
+  const __DEV__ = true
+  if (__DEV__) {  // Adds messages only in a dev environment
+    loadDevMessages();
+    loadErrorMessages();
   }
 
   return (

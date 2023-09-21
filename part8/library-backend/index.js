@@ -151,7 +151,8 @@ const typeDefs = `
       genre: String
     ): [Book!]
     allAuthors: [Author!]
-    me: User
+    me: User,
+    allGenres: [String!]
   }
 
   type Mutation {
@@ -202,6 +203,11 @@ const resolvers = {
     },
     me: async (root, args, context) => {
       return context.currentUser
+    },
+    allGenres: async () => {
+      const books = await Book.find({})
+      const genresWithDuplicates = books.map((b) => b.genres.map((g) => g)).flat()
+      return [...new Set(genresWithDuplicates)]
     }
   },
   Author: {
@@ -285,16 +291,15 @@ const resolvers = {
     createUser: async (root, args) => {
       const user = new User({ ...args })
 
-      return user.save()
-        .catch(error => {
-          throw new GraphQLError('createing new user failed', {
-            extensions: {
-              code: 'BAD_USER_INPUT',
-              invalidArgs: args.username,
-              error
-            }
-          })
+      return user.save().catch((error) => {
+        throw new GraphQLError('createing new user failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.username,
+            error
+          }
         })
+      })
     },
     login: async (root, args) => {
       const user = await User.findOne({ username: args.username })
