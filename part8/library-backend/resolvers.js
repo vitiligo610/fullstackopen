@@ -1,14 +1,20 @@
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
-
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
 const Book = require('./models/book')
 const Author = require('./models/author')
 
 const resolvers = {
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
+    }
+  },
   Query: {
     bookCount: async () => Book.collection.countDocuments(),
     authorCount: async () => Author.collection.countDocuments(),
-    allBooks: async (root, args) => {
+    allBooks: async (_, args) => {
       const author = args.author
       const genre = args.genre
       if (author) {
@@ -28,7 +34,7 @@ const resolvers = {
     allAuthors: async () => {
       return Author.find({})
     },
-    me: async (root, args, context) => {
+    me: async (_, __, context) => {
       return context.currentUser
     },
     allGenres: async () => {
@@ -45,7 +51,7 @@ const resolvers = {
     }
   },
   Mutation: {
-    addBook: async (root, args, context) => {
+    addBook: async (_, args, context) => {
       const currentUser = context.currentUser
 
       if (!currentUser) {
@@ -94,9 +100,11 @@ const resolvers = {
         )
       }
 
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
       return book
     },
-    editAuthor: async (root, args, context) => {
+    editAuthor: async (_, args, context) => {
       const currentUser = context.currentUser
 
       if (!currentUser) {
@@ -115,7 +123,7 @@ const resolvers = {
       await Author.findOneAndUpdate({ name }, { born: args.setBornTo })
       return Author.findOne({ name })
     },
-    createUser: async (root, args) => {
+    createUser: async (_, args) => {
       const user = new User({ ...args })
 
       return user.save().catch((error) => {
@@ -128,7 +136,7 @@ const resolvers = {
         })
       })
     },
-    login: async (root, args) => {
+    login: async (_, args) => {
       const user = await User.findOne({ username: args.username })
 
       if (!user || args.password !== 'secret') {
