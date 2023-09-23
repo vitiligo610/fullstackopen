@@ -5,6 +5,21 @@ import { ALL_AUTHORS, EDIT_AUTHOR } from '../queries'
 
 import Select from 'react-select'
 
+export const selectStyles = {
+  control: (baseStyles, state) => ({
+    ...baseStyles,
+    backgroundColor: '#fff',
+    width: '300px',
+    height: '1px',
+    marginBottom: '20px'
+  }),
+  menu: (baseStyles, state) => ({
+    ...baseStyles,
+    width: '300px',
+    border: '1px solid #f3f3f3'
+  })
+}
+
 const EditAuthorForm = () => {
   const [name, setName] = useState('')
   const [born, setBorn] = useState('')
@@ -37,28 +52,13 @@ const EditAuthorForm = () => {
     setBorn('')
   }
 
-  const customStyles = {
-    control: (baseStyles, state) => ({
-      ...baseStyles,
-      backgroundColor: '#fff',
-      width: '300px',
-      height: '1px',
-      marginBottom: '20px'
-    }),
-    menu: (baseStyles, state) => ({
-      ...baseStyles,
-      width: '300px',
-      border: '1px solid #f3f3f3'
-    })
-  }
-
   return (
     <div>
       <h2>set birthyear</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <Select
-            styles={customStyles}
+            styles={selectStyles}
             defaultValue={name}
             onChange={setName}
             options={options}

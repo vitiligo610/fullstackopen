@@ -32,8 +32,7 @@ const typeDefs = `
       genre: String
     ): [Book!]
     allAuthors: [Author!]
-    me: User,
-    allGenres: [String!]
+    me: User
   }
 
   type Mutation {
@@ -55,6 +54,10 @@ const typeDefs = `
       username: String!
       password: String!
     ): Token
+  }
+
+  type Subscription {
+    bookAdded: Book!
   }
 `
 

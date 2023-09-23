@@ -90,9 +90,3 @@ export const EDIT_AUTHOR = gql`
     }
   }
 `
-
-export const ALL_GENRES = gql`
-  query allGenres {
-    allGenres
-  }
-`

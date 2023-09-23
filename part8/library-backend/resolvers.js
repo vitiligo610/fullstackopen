@@ -1,6 +1,10 @@
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 
+const { PubSub } = require('graphql-subscriptions')
+const pubsub = new PubSub()
+
+const User = require('./models/user')
 const Book = require('./models/book')
 const Author = require('./models/author')
 
@@ -30,11 +34,6 @@ const resolvers = {
     },
     me: async (root, args, context) => {
       return context.currentUser
-    },
-    allGenres: async () => {
-      const books = await Book.find({})
-      const genresWithDuplicates = books.map((b) => b.genres.map((g) => g)).flat()
-      return [...new Set(genresWithDuplicates)]
     }
   },
   Author: {
@@ -94,6 +93,8 @@ const resolvers = {
         )
       }
 
+      pubsub.publish('BOOK_ADDED', { bookAdded: book })
+
       return book
     },
     editAuthor: async (root, args, context) => {
@@ -145,6 +146,11 @@ const resolvers = {
       }
 
       return { value: jwt.sign(userForToken, process.env.JWT_SECRET) }
+    }
+  },
+  Subscription: {
+    bookAdded: {
+      subscribe: () => pubsub.asyncIterator('BOOK_ADDED')
     }
   }
 }
