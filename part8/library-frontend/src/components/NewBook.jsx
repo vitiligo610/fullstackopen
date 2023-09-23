@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client'
 
-import { ALL_BOOKS, ALL_AUTHORS, ADD_BOOK, ALL_GENRES } from '../queries'
+import { ALL_BOOKS, ALL_AUTHORS, ADD_BOOK } from '../queries'
+
+import { updateCache } from '../App'
 
 const NewBook = ({ setNotification }) => {
   const [title, setTitle] = useState('')
@@ -15,13 +17,9 @@ const NewBook = ({ setNotification }) => {
       const msg = error.graphQLErrors[0].message
       setNotification(`ERROR ${msg}`)
     },
-    // refetchQueries: [{ query: ALL_AUTHORS }, { query: ALL_GENRES }],
+    // refetchQueries: [{ query: ALL_AUTHORS }],
     update: (cache, response) => {
-      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
-        return {
-          allBooks: allBooks.concat(response.data.addBook)
-        }
-      })
+      updateCache(cache, { query: ALL_BOOKS }, response.data.addBook)
       
       const cachedAuthors = cache.readQuery({ query: ALL_AUTHORS })
       if (cachedAuthors) {
@@ -34,19 +32,8 @@ const NewBook = ({ setNotification }) => {
 
       genres.forEach(genre => {
         const cachedQuery = cache.readQuery({ query: ALL_BOOKS, variables: { genre }})
-        if (cachedQuery) {
-          cache.updateQuery({ query: ALL_BOOKS, variables: { genre }}, ({ allBooks }) => {
-            return {
-              allBooks: allBooks.concat(response.data.addBook)
-            }
-          })
-        }
-      })
-
-      cache.updateQuery({ query: ALL_GENRES }, ({ allGenres }) => {
-        return {
-          allGenres: [...new Set(allGenres.concat(response.data.addBook.genres.flat()))]
-        }
+        if (cachedQuery)
+          updateCache(cache, { query: ALL_BOOKS, variables: { genre }}, response.data.addBook)
       })
     }
 

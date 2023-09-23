@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
-import { useApolloClient } from '@apollo/client'
-import { loadErrorMessages, loadDevMessages } from '@apollo/client/dev'
+import { useApolloClient, useSubscription } from '@apollo/client'
 
 import Home from './components/Home'
 import Notification from './components/Notification'
@@ -10,6 +9,24 @@ import Authors from './components/Authors'
 import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Recommend from './components/Recommend'
+
+import { ALL_BOOKS, BOOK_ADDED } from './queries'
+
+export const updateCache = (cache, query, addedBook) => {
+  const uniqueByTitle = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.title
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqueByTitle(allBooks.concat(addedBook))
+    }
+  })
+}
 
 const App = () => {
   const [notification, setNotification] = useState(null)
@@ -36,11 +53,13 @@ const App = () => {
     setTimeout(() => setNotification(null), 2000)
   }
 
-  const __DEV__ = true
-  if (__DEV__) {  // Adds messages only in a dev environment
-    loadDevMessages();
-    loadErrorMessages();
-  }
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data, client }) => {
+      const addedBook = data.data.bookAdded
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook)
+      notify(`SUCCESS '${addedBook.title}' by '${addedBook.author.name}' added`)
+    }
+  })
 
   return (
     <div>
