@@ -20,6 +20,6 @@ Learn React, Redux, Node.js, MongoDB, GraphQL and TypeScript in one go! This cou
 
 ### [Part 7 - React router, custom hooks, styling app with CSS and webpack](./part7)
 
-<!-- ### [Part 8 - GraphQL](./part8) -->
+### [Part 8 - GraphQL](./part8)
 
 <!-- ### [Part 9 - Typescript](./part9) -->
