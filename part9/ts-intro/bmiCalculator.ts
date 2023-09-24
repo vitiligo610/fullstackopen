@@ -42,3 +42,5 @@ try {
     console.log('An unknown error occurred.');
   }
 }
+
+export default calculateBmi
