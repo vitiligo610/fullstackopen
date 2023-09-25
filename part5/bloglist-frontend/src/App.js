@@ -59,7 +59,7 @@ const App = () => {
           setTimeout(() => setSuccessMessage(null), 2000)
         })
     } catch(error) {
-      setErrorMessage(`Cannot update blog ${blogToDelete.title}`)
+      setErrorMessage(`Cannot update blog ${blogToUpdate.title}`)
       setTimeout(() => setErrorMessage(null), 2000)
     }
   }
@@ -146,7 +146,7 @@ LoginForm.propTypes = {
   username: PropTypes.string.isRequired,
   password: PropTypes.string.isRequired,
   handleUsernameChange: PropTypes.func.isRequired,
-  handlePasswordChange: PropTypes.string.isRequired,
+  handlePasswordChange: PropTypes.func.isRequired,
   handleSubmit: PropTypes.func.isRequired
 }
 
