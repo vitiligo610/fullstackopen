@@ -1,46 +1,42 @@
-interface Inputs {
+export interface BmiInputs {
   height: number,
   weight: number
 }
 
-const parseArguments = (args: string[]): Inputs => {
-  if (args.length < 4) throw new Error('Not enough arguments');
-  if (args.length > 4) throw new Error('Too many arguments');
-
-  if (!isNaN(Number(args[2])) && !isNaN(Number(args[3]))) {
+export const parseBmiArguments = (height: number, weight: number): BmiInputs => {
+  if (!isNaN(height) && !isNaN(weight)) {
     return {
-      height: Number(args[2]),
-      weight: Number(args[3])
+      height,
+      weight
     };
   } else {
     throw new Error('Provided values are not numbers');
   }
 };
 
-const calculateBmi = (height: number, weight: number): string => {
-  if (isNaN(height) || isNaN(weight))
+export const calculateBmi = (height: number, weight: number): string => {
+  if (isNaN(height) || isNaN(weight)) {
     throw new Error('Provided inputs are not numbers');
+  }
   
   const bmi: number = weight / ((height / 100) ** 2);
   
-  if (bmi < 18.5)
-    return 'under weight';
-  else if (bmi >= 18.5 && bmi <= 24.9)
-    return 'healthy weight';
-  else
-    return 'over weight';
-}
-
-try {
-  const { height, weight } = parseArguments(process.argv)
-  console.log(calculateBmi(height, weight));
-} catch (error) {
-  if (error instanceof Error) {
-    let errorMessage = 'An unexpected error occurred: ' + error.message;
-    console.log(errorMessage);
+  if (bmi < 15) {
+    return 'Very severely underweight';
+  } else if (bmi > 15 && bmi < 16) {
+    return 'Severely underweight';
+  } else if (bmi > 16 && bmi < 18.5) {
+    return 'Underweight';
+  } else if (bmi > 18.5 && bmi < 25) {
+    return 'Normal (healthy weight)';
+  } else if (bmi > 25 && bmi < 30) {
+    return 'Overweight';
+  } else if (bmi > 30 && bmi < 35) {
+    return 'Obese Class I (Moderately obese)';
+  } else if (bmi > 35 && bmi < 40) {
+    return 'Obese Class II (Severely obese)';
   } else {
-    console.log('An unknown error occurred.');
+    return 'Obese Class III (Very severely obese)	';
   }
-}
-
-export default calculateBmi
+  
+};
