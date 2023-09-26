@@ -6,8 +6,7 @@ export interface Diagnosis {
 
 export enum Gender {
   Male = "male",
-  Female = "female",
-  Other = "other"
+  Female = "female"
 }
 
 export interface Patient {
