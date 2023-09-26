@@ -4,8 +4,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-import diagnosisRouter from './routes/diagnosis';
-import patientRouter from './routes/patient';
+import diagnosisRouter from './routes/diagnoses';
+import patientRouter from './routes/patients';
 
 app.get('/api/ping', (_req, res) => {
   console.log('someone pinged here');
